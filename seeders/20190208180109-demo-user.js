@@ -6,6 +6,7 @@ module.exports = {
         firstName: 'John',
         lastName: 'Doe',
         email: 'demo@demo.com',
+        password: '123123',
         createdAt: '01-01-2019',
         updatedAt: '01-01-2019'
       },
@@ -13,6 +14,7 @@ module.exports = {
         firstName: 'John2',
         lastName: 'Doe2',
         email: 'demo2@demo.com',
+        password: '123123123',
         createdAt: '01-01-2019',
         updatedAt: '01-01-2019'
       }], {});
