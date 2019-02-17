@@ -1,26 +1,23 @@
 {
-  "development": {
-    "username": "t3",
-    "password": "t3",
-    "database": "db_training_dev",
-    "host": "localhost",
-    "port": 5432,
-    "dialect": "postgres"
-  },
-  "test": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "db_training_test",
-    "host": "localhost",
-    "port": 5432,
-    "dialect": "postgres"
-  },
-  "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "db_training",
-    "host": "localhost",
-    "port": 5432,
-    "dialect": "postgres"
+    "development": {
+      "username": "t2",
+      "password": "t2",
+      "database": "db_training_dev",
+      "host": "localhost",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "training",
+      "password": "training",
+      "database": "db_training_test",
+      "host": "localhost",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "training",
+      "password": "training",
+      "database": "db_training",
+      "host": "localhost",
+      "dialect": "mysql"
+    }
   }
-}
