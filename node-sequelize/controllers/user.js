@@ -1,6 +1,9 @@
 const User = require('../models').User;
+const validateEmail = require('../helper').validateEmail;
 
 const add = (req, res) => {
+    if(!validateEmail(req.body.email)) res.status(400).send("Email is not valid");
+
     return User.findAll({
         where: {
             email: req.body.email
