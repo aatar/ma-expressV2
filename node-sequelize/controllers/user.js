@@ -1,6 +1,7 @@
 const User = require('../models').User;
 const validateEmail = require('../helper').validateEmail;
 const validatePassword = require('../helper').validatePassword;
+var CryptoJS = require("crypto-js");
 
 const add = (req, res) => {
     if(!validateEmail(req.body.email)) res.status(400).send("Email is not valid");
@@ -18,7 +19,7 @@ const add = (req, res) => {
             name: req.body.name,
             surname: req.body.surname,
             email: req.body.email,
-            password: req.body.password
+            password: CryptoJS.MD5(req.body.password).toString()
         })
         .then((user) => res.status(201).send(user))
         .catch((error) => res.status(400).send(error));
