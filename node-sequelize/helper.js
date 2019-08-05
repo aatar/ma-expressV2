@@ -3,4 +3,9 @@ const validateEmail = email => {
     return regexp.test(email);
 }
 
-module.exports = {validateEmail};
+const validatePassword = password => {
+    const letterNumber = /^[0-9a-zA-Z]+$/;
+    return letterNumber.test(password) && password.length >= 8;
+}
+
+module.exports = {validateEmail, validatePassword};
