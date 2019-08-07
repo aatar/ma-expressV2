@@ -23,10 +23,3 @@ exports.addUser = (req, res, next) => {
     })
     .catch(next);
 };
-
-exports.deleteAll = (req, res, next) =>
-  User.destroy({
-    truncate: true
-  })
-    .then(() => res.status(200).send('Deleted All'))
-    .catch(next);
