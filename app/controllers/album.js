@@ -1,8 +1,14 @@
+const fetch = require('node-fetch');
+
 const listAlbums = (req, res) => {
-  res.status(200).send('hello');
-  /* fetch('https://jsonplaceholder.typicode.com/posts/1')
+  fetch('https://jsonplaceholder.typicode.com/albums')
     .then(response => response.json())
-    .then(json => res.status(200).send(json));*/
+    .then(json => res.status(200).send(json));
 };
 
-module.exports = { listAlbums };
+const listPhotos = (req, res) => {
+  fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${req.params.id}`)
+    .then(response => response.json())
+    .then(json => res.status(200).send(json));
+};
+module.exports = { listAlbums, listPhotos };
