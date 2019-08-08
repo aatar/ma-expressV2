@@ -25,7 +25,7 @@ const add = (req, res) => {
         email: req.body.email,
         password: md5(req.body.password).toString()
       })
-        .then(userCreated => res.status(201).send(userCreated))
+        .then(() => res.status(201).send('OK'))
         .catch(error => res.status(400).send(error));
     })
     .catch(error => res.status(400).send(error));
