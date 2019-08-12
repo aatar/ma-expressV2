@@ -1,8 +1,11 @@
 const { User } = require('../models');
-const { validateEmail, validatePassword } = require('../helpers/utils');
+const { validateEmail, validatePassword, validateArguments } = require('../helpers/utils');
 const md5 = require('crypto-js').MD5;
 
 const add = (req, res) => {
+  if (!validateArguments(req.body)) {
+    res.status(400).send('Argument/s missing');
+  }
   if (!validateEmail(req.body.email)) {
     res.status(400).send('Email is not valid');
   }
@@ -31,4 +34,11 @@ const add = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-module.exports = { add };
+const deleteAll = (req, res) =>
+  User.destroy({
+    truncate: true
+  })
+    .then(() => res.status(200).send('Deleted All'))
+    .catch(error => res.status(400).send(error));
+
+module.exports = { add, deleteAll };

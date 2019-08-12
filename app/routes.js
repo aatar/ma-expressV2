@@ -1,7 +1,7 @@
 // const controller = require('./controllers/controller');
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
-const { add: addUser } = require('./controllers/user');
+const { add: addUser, deleteAll: deleteUsers } = require('./controllers/user');
 
 exports.init = app => {
   app.get('/', (req, res) => res.status(200).send('Welcome!!'));
@@ -9,6 +9,7 @@ exports.init = app => {
   app.get('/albums', listAlbums);
   app.get('/albums/:id/photos', listPhotos);
   app.post('/users', addUser);
+  app.delete('/users', deleteUsers);
   // app.get('/endpoint/get/path', [], controller.methodGET);
   // app.put('/endpoint/put/path', [], controller.methodPUT);
   // app.post('/endpoint/post/path', [], controller.methodPOST);
