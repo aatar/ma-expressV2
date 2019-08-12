@@ -2,7 +2,7 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
 const { add: addUser, deleteAll: deleteUsers, login } = require('./controllers/user');
-const { add: addUserMiddleware } = require('./middlewares/user');
+const { add: addUserMiddleware, login: loginMiddleware } = require('./middlewares/user');
 
 exports.init = app => {
   app.get('/', (req, res) => res.status(200).send('Welcome!!'));
@@ -11,7 +11,7 @@ exports.init = app => {
   app.get('/albums/:id/photos', listPhotos);
   app.post('/users', addUserMiddleware, addUser);
   app.delete('/users', deleteUsers);
-  app.post('/users/sessions', login);
+  app.post('/users/sessions', loginMiddleware, login);
   // app.get('/endpoint/get/path', [], controller.methodGET);
   // app.put('/endpoint/put/path', [], controller.methodPUT);
   // app.post('/endpoint/post/path', [], controller.methodPOST);

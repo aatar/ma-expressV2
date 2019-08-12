@@ -1,8 +1,13 @@
 /* eslint-disable no-negated-condition */
-const { validateEmail, validatePassword, validateArguments } = require('../helpers/utils');
+const {
+  validateEmail,
+  validatePassword,
+  validateArgumentsSignup,
+  validateArgumentsLogin
+} = require('../helpers/utils');
 
 const add = (req, res, next) => {
-  if (!validateArguments(req.body)) {
+  if (!validateArgumentsSignup(req.body)) {
     res.status(400).send('Argument/s missing');
   } else if (!validateEmail(req.body.email)) {
     res.status(400).send('Email is not valid');
@@ -13,4 +18,14 @@ const add = (req, res, next) => {
   }
 };
 
-module.exports = { add };
+const login = (req, res, next) => {
+  if (!validateArgumentsLogin(req.body)) {
+    res.status(400).send('Argument/s missing');
+  } else if (!validateEmail(req.body.email)) {
+    res.status(400).send('Email is not valid');
+  } else {
+    next();
+  }
+};
+
+module.exports = { add, login };
