@@ -31,7 +31,7 @@ const add = (req, res) => {
       })
       .catch(error => res.status(400).send(error));
   }
-  return '';
+  return res.status(400).send();
 };
 
 const deleteAll = (req, res) =>
