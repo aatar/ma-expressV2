@@ -8,4 +8,6 @@ const validatePassword = password => {
   return letterNumber.test(password) && password.length >= 8;
 };
 
-module.exports = { validateEmail, validatePassword };
+const validateArguments = body => body.name && body.surname && body.email && body.password;
+
+module.exports = { validateEmail, validatePassword, validateArguments };
