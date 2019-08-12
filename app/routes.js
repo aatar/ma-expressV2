@@ -2,6 +2,7 @@ const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
 const { addUser, login } = require('./controllers/user');
 const { validateSchema } = require('./middlewares/common');
+const { login: loginMiddleware } = require('./middlewares/user');
 const schemas = require('./schemas');
 
 exports.init = app => {
@@ -10,5 +11,5 @@ exports.init = app => {
   app.get('/albums', listAlbums);
   app.get('/albums/:id/photos', listPhotos);
   app.post('/users', [validateSchema(schemas.userSignUp)], addUser);
-  app.post('/users/sessions', login);
+  app.post('/users/sessions', loginMiddleware, login);
 };
