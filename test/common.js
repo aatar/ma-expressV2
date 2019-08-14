@@ -19,4 +19,10 @@ const deleteAllUsers = () =>
     method: 'delete'
   });
 
-module.exports = { insertUser, login, deleteAllUsers };
+const getUsers = token =>
+  fetch('http://localhost:8080/users', {
+    method: 'get',
+    headers: { 'Content-Type': 'application/json', Authorization: token }
+  });
+
+module.exports = { insertUser, login, deleteAllUsers, getUsers };

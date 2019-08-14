@@ -1,4 +1,4 @@
-const { insertUser, login, deleteAllUsers } = require('./common');
+const { insertUser, login, deleteAllUsers, getUsers } = require('./common');
 const { defaultUser } = require('./constants');
 
 test('should insert user', async () => {
@@ -80,6 +80,33 @@ test('incorrect password', async () => {
     password: '1231231234'
   };
   const response = await login(loginBody);
+  deleteAllUsers();
+  expect(response.status).toBe(400);
+});
+
+test('should list users', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const loginBody = {
+    email: 'marcos.atar@wolox.com.ar',
+    password: '123123123'
+  };
+  const loginResponse = await login(loginBody);
+  const token = loginResponse.headers.get('authorization');
+  const response = await getUsers(token);
+  deleteAllUsers();
+  expect(response.status).toBe(200);
+});
+
+test('should not list users', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const loginBody = {
+    email: 'marcos.atar@wolox.com.ar',
+    password: '123123123'
+  };
+  await login(loginBody);
+  const response = await getUsers('Bearer fsdfdsf');
   deleteAllUsers();
   expect(response.status).toBe(400);
 });
