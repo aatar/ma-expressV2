@@ -2,6 +2,8 @@ const { User } = require('../models'),
   bcrypt = require('bcryptjs'),
   jwt = require('jsonwebtoken');
 
+const { TOKEN_START } = require('../constants');
+
 const list = (req, res) => {
   User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
     .then(results => {
@@ -59,12 +61,16 @@ const login = (req, res) => {
       } else {
         bcrypt.compare(req.body.password, user[0].password, (err, areEquals) => {
           if (areEquals) {
-            const token = jwt.sign({ email: req.body.email }, process.env.PRIVATE_KEY, {
-              algorithm: 'HS256'
-            });
+            const token = jwt.sign(
+              { email: req.body.email, password: user[0].password },
+              process.env.PRIVATE_KEY,
+              {
+                algorithm: 'HS256'
+              }
+            );
             res
               .status(200)
-              .set('Authorization', `Bearer ${token}`)
+              .set('Authorization', TOKEN_START + token)
               .send('OK');
           } else {
             res.status(400).send('Password is incorrect');
