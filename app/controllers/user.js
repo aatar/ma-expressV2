@@ -5,6 +5,21 @@ const { User } = require('../models'),
   logger = require('../logger'),
   { signJWT, compare } = require('./utils');
 
+exports.list = (req, res) => {
+  User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
+    .then(results => {
+      const itemCount = results.count;
+      const pageCount = Math.ceil(results.count / req.query.limit);
+      res.status(200).send({
+        page: results.rows,
+        currentPage: req.query.page,
+        totalPages: pageCount,
+        totalItems: itemCount
+      });
+    })
+    .catch(error => res.status(400).send(error));
+};
+
 exports.addUser = (req, res, next) => {
   logger.info('Searching user...');
   return User.findOne({
