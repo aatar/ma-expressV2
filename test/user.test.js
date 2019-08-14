@@ -1,96 +1,85 @@
-const fetch = require('node-fetch');
-const { shouldNotInsertUser } = require('./common');
+const { insertUser, login, deleteAllUsers } = require('./common');
 const { defaultUser } = require('./constants');
 
-test('should delete users', () => {
-  fetch('http://localhost:8080/users', {
-    method: 'delete'
-  }).then(response => expect(response.status).toBe(200));
+test('should insert user', async () => {
+  await deleteAllUsers();
+  const response = await insertUser(defaultUser);
+  deleteAllUsers();
+  expect(response.status).toBe(201);
 });
 
-test('should insert user', () => {
-  fetch('http://localhost:8080/users', {
-    method: 'post',
-    body: JSON.stringify(defaultUser),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => expect(response.status).toBe(201));
+test('already used email', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const response = await insertUser(defaultUser);
+  deleteAllUsers();
+  expect(response.status).toBe(400);
 });
 
-test('already used email', () => {
-  fetch('http://localhost:8080/users', {
-    method: 'post',
-    body: JSON.stringify(defaultUser),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(() => shouldNotInsertUser(defaultUser));
-});
-
-test('password is not valid', () => {
+test('password is not valid', async () => {
   const body = {
     name: 'Ariel',
     surname: 'Atar',
     email: 'marcos.atar2@wolox.com.ar',
     password: '23123'
   };
-  shouldNotInsertUser(body);
+  const response = await insertUser(body);
+  expect(response.status).toBe(400);
 });
 
-test('arguments missing', () => {
+test('arguments missing', async () => {
   const body = {
     name: 'Ariel',
     email: 'ariel@wolox.com.ar',
     password: '123123123'
   };
-  shouldNotInsertUser(body);
+  const response = await insertUser(body);
+  expect(response.status).toBe(400);
 });
 
-test('email is not valid', () => {
+test('email is not valid', async () => {
   const body = {
     name: 'Ariel',
     surname: 'Atar',
     email: 'arielatar@woleox.com.ar',
     password: '123123123'
   };
-  shouldNotInsertUser(body);
+  const response = await insertUser(body);
+  expect(response.status).toBe(400);
 });
 
-test('should login', () => {
-  fetch('http://localhost:8080/users', {
-    method: 'post',
-    body: JSON.stringify(defaultUser),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(() => {
-    const loginBody = {
-      email: 'marcos.atar@wolox.com.ar',
-      password: '123123123'
-    };
-    fetch('http://localhost:8080/users/sessions', {
-      method: 'post',
-      body: JSON.stringify(loginBody),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => expect(response.status).toBe(200));
-  });
+test('should login', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const loginBody = {
+    email: 'marcos.atar@wolox.com.ar',
+    password: '123123123'
+  };
+  const response = await login(loginBody);
+  deleteAllUsers();
+  expect(response.status).toBe(200);
 });
 
-test('incorrect user or password', () => {
-  const body = {
+test('incorrect user or password', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const loginBody = {
     email: 'marcos.atar32@wolox.com.ar',
     password: '123123123'
   };
-  fetch('http://localhost:8080/users/sessions', {
-    method: 'post',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => expect(response.status).toBe(400));
+  const response = await login(loginBody);
+  deleteAllUsers();
+  expect(response.status).toBe(400);
 });
 
-test('incorrect password', () => {
-  const body = {
+test('incorrect password', async () => {
+  await deleteAllUsers();
+  await insertUser(defaultUser);
+  const loginBody = {
     email: 'marcos.atar@wolox.com.ar',
     password: '1231231234'
   };
-  fetch('http://localhost:8080/users/sessions', {
-    method: 'post',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => expect(response.status).toBe(400));
+  const response = await login(loginBody);
+  deleteAllUsers();
+  expect(response.status).toBe(400);
 });
