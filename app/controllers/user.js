@@ -22,7 +22,7 @@ exports.list = (req, res, next) => {
     .catch(next);
 };
 
-exports.addUser = (req, res, next) => {
+const add = (req, res, next, admin) => {
   logger.info('Searching user...');
   return User.findOne({
     where: {
@@ -31,16 +31,28 @@ exports.addUser = (req, res, next) => {
   })
     .then(user => {
       if (user) {
-        throw signupError('Email is already in use');
+        if (admin) {
+          User.update({ admin: true }, { where: { email: req.body.email } })
+            .then(() => res.send('OK'))
+            .catch(next);
+        } else {
+          return next(signupError('Email is already in use'));
+        }
       }
       logger.info('Email is new.');
       return signUpMapper(req.body).then(mappedUser => {
         logger.info('Creating user...');
-        return User.create(mappedUser).then(userCreated => res.status(201).send(serializeUser(userCreated)));
+        return User.create(mappedUser)
+          .then(userCreated => res.status(201).send(serializeUser(userCreated)))
+          .catch(next);
       });
     })
     .catch(next);
 };
+
+exports.addUser = (req, res) => add(req, res, false);
+
+exports.addAdmin = (req, res) => add(req, res, true);
 
 exports.login = (req, res, next) => {
   logger.info('Searching user...');

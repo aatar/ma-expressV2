@@ -5,5 +5,6 @@ exports.signUpMapper = body =>
     name: body.name,
     surname: body.surname,
     email: body.email,
-    password: hashedPassword
+    password: hashedPassword,
+    admin: body.admin
   }));
