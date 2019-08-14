@@ -19,6 +19,20 @@ const list = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
+const insertIntoTable = (req, res, admin) => {
+  bcrypt.hash(req.body.password, 10).then(hashedPassword =>
+    User.create({
+      name: req.body.name,
+      surname: req.body.surname,
+      email: req.body.email,
+      password: hashedPassword,
+      admin
+    })
+      .then(() => res.status(201).send('OK'))
+      .catch(error => res.status(400).send(error))
+  );
+};
+
 const add = (req, res, admin) =>
   User.findAll({
     where: {
@@ -35,17 +49,7 @@ const add = (req, res, admin) =>
           res.status(400).send('Email is already in use');
         }
       }
-      bcrypt.hash(req.body.password, 10).then(hashedPassword =>
-        User.create({
-          name: req.body.name,
-          surname: req.body.surname,
-          email: req.body.email,
-          password: hashedPassword,
-          admin
-        })
-          .then(() => res.status(201).send('OK'))
-          .catch(error => res.status(400).send(error))
-      );
+      insertIntoTable(req, res, admin);
     })
     .catch(error => res.status(400).send(error));
 

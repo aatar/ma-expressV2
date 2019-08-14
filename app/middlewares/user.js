@@ -5,6 +5,7 @@ const {
     validateArgumentsSignup,
     validateArgumentsLogin
   } = require('../helpers/utils'),
+  { User } = require('../models'),
   { checkIfUserIsLogged: userCheck } = require('./common');
 
 const add = (req, res, next) => {
@@ -31,6 +32,14 @@ const login = (req, res, next) => {
 
 const checkIfUserIsLogged = (req, res, next) => userCheck(req, res, next, false);
 
-const checkIfUserIsAdmin = (req, res, next) => userCheck(req, res, next, true);
+const checkIfUserIsAdmin = (req, res, next) => {
+  User.findAll().then(users => {
+    if (users.length > 0) {
+      userCheck(req, res, next, true);
+    } else {
+      next();
+    }
+  });
+};
 
 module.exports = { add, login, checkIfUserIsLogged, checkIfUserIsAdmin };
