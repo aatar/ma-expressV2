@@ -28,7 +28,6 @@ const add = (req, res, admin) =>
     .then(user => {
       if (user.length > 0) {
         if (admin) {
-          console.log('ADMIN');
           User.update({ admin: true }, { where: { email: req.body.email } })
             .then(() => res.status(200).send('OK'))
             .catch(error => res.status(400).send(error));
