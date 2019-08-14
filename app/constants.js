@@ -1,3 +1,4 @@
+<<<<<<< 8583acaa386fc13dad664b03bab943216dbc1e1f
 const EMAIL_REGEXP = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/;
 const PASSWORD_REGEXP = /^[0-9a-zA-Z]+$/;
 const PASSWORD_MIN_LENGTH = 8;
@@ -14,3 +15,8 @@ module.exports = {
   PASSWORD_REGEXP_ERROR,
   PASSWORD_MIN_LENGTH_ERROR
 };
+=======
+const TOKEN_START = 'Bearer ';
+
+module.exports = { TOKEN_START };
+>>>>>>> finished, only missing tests

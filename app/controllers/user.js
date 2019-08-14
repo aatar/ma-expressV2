@@ -5,6 +5,8 @@ const { User } = require('../models'),
   logger = require('../logger'),
   { signJWT, compare } = require('./utils');
 
+const { TOKEN_START } = require('../constants');
+
 exports.list = (req, res) => {
   User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
     .then(results => {
