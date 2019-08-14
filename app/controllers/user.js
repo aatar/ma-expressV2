@@ -8,7 +8,7 @@ const { User } = require('../models'),
 const { TOKEN_START } = require('../constants');
 
 exports.list = (req, res, next) => {
-  User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
+  User.findAndCountAll({ limit: req.query.limit, offset: req.skip, order: [['id', 'ASC']] })
     .then(results => {
       const itemCount = results.count;
       const pageCount = Math.ceil(results.count / req.query.limit);
