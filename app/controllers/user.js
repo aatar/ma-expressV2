@@ -19,7 +19,7 @@ const list = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-const add = (req, res) =>
+const add = (req, res, admin) =>
   User.findAll({
     where: {
       email: req.body.email
@@ -27,20 +27,32 @@ const add = (req, res) =>
   })
     .then(user => {
       if (user.length > 0) {
-        res.status(400).send('Email is already in use');
+        if (admin) {
+          console.log('ADMIN');
+          User.update({ admin: true }, { where: { email: req.body.email } })
+            .then(() => res.status(200).send('OK'))
+            .catch(error => res.status(400).send(error));
+        } else {
+          res.status(400).send('Email is already in use');
+        }
       }
       bcrypt.hash(req.body.password, 10).then(hashedPassword =>
         User.create({
           name: req.body.name,
           surname: req.body.surname,
           email: req.body.email,
-          password: hashedPassword
+          password: hashedPassword,
+          admin
         })
           .then(() => res.status(201).send('OK'))
           .catch(error => res.status(400).send(error))
       );
     })
     .catch(error => res.status(400).send(error));
+
+const addUser = (req, res) => add(req, res, false);
+
+const addAdmin = (req, res) => add(req, res, true);
 
 const deleteAll = (req, res) =>
   User.destroy({
@@ -62,7 +74,7 @@ const login = (req, res) => {
         bcrypt.compare(req.body.password, user[0].password, (err, areEquals) => {
           if (areEquals) {
             const token = jwt.sign(
-              { email: req.body.email, password: user[0].password },
+              { email: req.body.email, password: user[0].password, admin: user[0].admin },
               process.env.PRIVATE_KEY,
               {
                 algorithm: 'HS256'
@@ -81,4 +93,4 @@ const login = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-module.exports = { list, add, deleteAll, login };
+module.exports = { list, addUser, addAdmin, deleteAll, login };

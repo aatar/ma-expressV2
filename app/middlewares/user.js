@@ -5,10 +5,7 @@ const {
     validateArgumentsSignup,
     validateArgumentsLogin
   } = require('../helpers/utils'),
-  { User } = require('../models'),
-  { reportNotLoggedUser } = require('./common'),
-  { TOKEN_START } = require('../constants'),
-  jwt = require('jsonwebtoken');
+  { checkIfUserIsLogged: userCheck } = require('./common');
 
 const add = (req, res, next) => {
   if (!validateArgumentsSignup(req.body)) {
@@ -32,33 +29,8 @@ const login = (req, res, next) => {
   }
 };
 
-const checkIfUserIsLogged = (req, res, next) => {
-  let authorizationToken = req.headers.authorization;
-  if (authorizationToken.startsWith(TOKEN_START)) {
-    authorizationToken = authorizationToken.substring(TOKEN_START.length);
-    jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
-      if (decoded && decoded.email && decoded.password) {
-        User.findAll({
-          where: {
-            email: decoded.email,
-            password: decoded.password
-          }
-        })
-          .then(user => {
-            if (user.length <= 0) {
-              reportNotLoggedUser(res);
-            } else {
-              next();
-            }
-          })
-          .catch(error => res.status(400).send(error));
-      } else {
-        reportNotLoggedUser(res);
-      }
-    });
-  } else {
-    reportNotLoggedUser(res);
-  }
-};
+const checkIfUserIsLogged = (req, res, next) => userCheck(req, res, next, false);
 
-module.exports = { add, login, checkIfUserIsLogged };
+const checkIfUserIsAdmin = (req, res, next) => userCheck(req, res, next, true);
+
+module.exports = { add, login, checkIfUserIsLogged, checkIfUserIsAdmin };

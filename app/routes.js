@@ -1,8 +1,13 @@
 // const controller = require('./controllers/controller');
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
-const { add: addUser, deleteAll: deleteUsers, login, list: listUsers } = require('./controllers/user');
-const { add: addUserMiddleware, login: loginMiddleware, checkIfUserIsLogged } = require('./middlewares/user');
+const { addUser, addAdmin, deleteAll: deleteUsers, login, list: listUsers } = require('./controllers/user');
+const {
+  add: addUserMiddleware,
+  login: loginMiddleware,
+  checkIfUserIsLogged,
+  checkIfUserIsAdmin
+} = require('./middlewares/user');
 
 exports.init = app => {
   app.get('/', (req, res) => res.status(200).send('Welcome!!'));
@@ -11,9 +16,7 @@ exports.init = app => {
   app.get('/albums/:id/photos', listPhotos);
   app.get('/users', checkIfUserIsLogged, listUsers);
   app.post('/users', addUserMiddleware, addUser);
+  app.post('/admin/users', addUserMiddleware, checkIfUserIsAdmin, addAdmin);
   app.delete('/users', deleteUsers);
   app.post('/users/sessions', loginMiddleware, login);
-  // app.get('/endpoint/get/path', [], controller.methodGET);
-  // app.put('/endpoint/put/path', [], controller.methodPUT);
-  // app.post('/endpoint/post/path', [], controller.methodPOST);
 };
