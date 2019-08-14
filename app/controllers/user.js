@@ -1,6 +1,21 @@
-const { User } = require('../models');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const { User } = require('../models'),
+  bcrypt = require('bcryptjs'),
+  jwt = require('jsonwebtoken');
+
+const list = (req, res) => {
+  User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
+    .then(results => {
+      const itemCount = results.count;
+      const pageCount = Math.ceil(results.count / req.query.limit);
+      res.status(200).send({
+        page: results.rows,
+        currentPage: req.query.page,
+        totalPages: pageCount,
+        totalItems: itemCount
+      });
+    })
+    .catch(error => res.status(400).send(error));
+};
 
 const add = (req, res) =>
   User.findAll({
@@ -60,4 +75,4 @@ const login = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-module.exports = { add, deleteAll, login };
+module.exports = { list, add, deleteAll, login };
