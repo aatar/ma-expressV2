@@ -1,14 +1,16 @@
-const fetch = require('node-fetch');
+const {
+  listAlbums: listAlbumsService,
+  listPhotos: listPhotosService
+} = require('../services/jsonplaceholder');
 
-const listAlbums = (req, res) => {
-  fetch('https://jsonplaceholder.typicode.com/albums')
-    .then(response => response.json())
-    .then(json => res.status(200).send(json));
-};
+const listAlbums = (req, res, next) =>
+  listAlbumsService()
+    .then(response => res.send(response))
+    .catch(err => next(err));
 
-const listPhotos = (req, res) => {
-  fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${req.params.id}`)
-    .then(response => response.json())
-    .then(json => res.status(200).send(json));
-};
+const listPhotos = (req, res, next) =>
+  listPhotosService(req)
+    .then(response => res.send(response))
+    .catch(err => next(err));
+
 module.exports = { listAlbums, listPhotos };
