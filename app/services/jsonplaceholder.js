@@ -4,4 +4,6 @@ const listAlbums = () => rp({ uri: `${process.env.JSONPLACEHOLDER_BASE_URL}/albu
 const listPhotos = req =>
   rp({ uri: `${process.env.JSONPLACEHOLDER_BASE_URL}/photos?albumId=${req.params.id}`, json: true });
 
-module.exports = { listAlbums, listPhotos };
+const findAlbumsById = id => rp({ uri: `${process.env.JSONPLACEHOLDER_BASE_URL}/albums/${id}`, json: true });
+
+module.exports = { listAlbums, listPhotos, findAlbumsById };

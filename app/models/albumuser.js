@@ -27,7 +27,10 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
   AlbumUser.associate = models => {
-    AlbumUser.belongsTo(models.User);
+    AlbumUser.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'albumUsers'
+    });
   };
   return AlbumUser;
 };
