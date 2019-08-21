@@ -1,7 +1,7 @@
 const { AlbumUser, User } = require('../models');
 
 const checkIfUserBoughtAlbum = (req, res, next) =>
-  AlbumUser.findOne({
+  AlbumUser.findAll({
     where: {
       album_id: req.params.id,
       user_id: req.params.userId
