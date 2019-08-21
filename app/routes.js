@@ -10,7 +10,7 @@ const {
 } = require('./middlewares/user');
 
 exports.init = app => {
-  app.get('/', (req, res) => res.status(200).send('Welcome!!'));
+  app.get('/', (req, res) => res.status(200).send('Welcome!!!'));
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
   app.get('/albums/:id/photos', listPhotos);
