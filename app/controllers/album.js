@@ -3,6 +3,7 @@ const {
     listPhotos: listPhotosService,
     findAlbumsById: findAlbumsByIdService
   } = require('../services/jsonplaceholder'),
+  { deleteAll: deleteAllService } = require('../services/album'),
   { AlbumUser } = require('../models');
 
 const listAlbums = (req, res, next) =>
@@ -28,4 +29,9 @@ const buyAlbum = (req, res, next) =>
     })
     .catch(err => next(err));
 
-module.exports = { listAlbums, listPhotos, buyAlbum };
+const deleteAll = (req, res, next) =>
+  deleteAllService()
+    .then(() => res.status(200).send('Deleted All'))
+    .catch(error => next(error));
+
+module.exports = { listAlbums, listPhotos, buyAlbum, deleteAll };
