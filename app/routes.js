@@ -1,8 +1,9 @@
-// const controller = require('./controllers/controller');
 const { healthCheck } = require('./controllers/healthCheck');
+const { listAlbums, listPhotos } = require('./controllers/album');
+
 exports.init = app => {
+  app.get('/', (req, res) => res.send('Welcome to Heroku'));
   app.get('/health', healthCheck);
-  // app.get('/endpoint/get/path', [], controller.methodGET);
-  // app.put('/endpoint/put/path', [], controller.methodPUT);
-  // app.post('/endpoint/post/path', [], controller.methodPOST);
+  app.get('/albums', listAlbums);
+  app.get('/albums/:id/photos', listPhotos);
 };
