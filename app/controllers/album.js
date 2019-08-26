@@ -16,8 +16,10 @@ exports.listAlbums = (req, res, next) => {
 exports.listBoughtAlbums = (req, res, next) => {
   logger.info('Searching for bought albums');
   AlbumUser.findAll({
-    user_id: req.params.id,
-    attributes: ['id', 'album_id', 'album_title', 'user_id'],
+    where: {
+      user_id: req.params.id
+    },
+    attributes: ['id', 'album_id', 'album_title'],
     include: [
       {
         model: User,
