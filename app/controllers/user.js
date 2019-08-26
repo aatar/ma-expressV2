@@ -1,17 +1,11 @@
 const { User } = require('../models'),
-  { generateSignupError } = require('./common'),
-  { validateEmail, validatePassword } = require('../helpers/utils');
+  { generateSignupError } = require('../helpers/utils'),
+  { validateSignupFields } = require('../helpers/utils');
+
 const md5 = require('crypto-js').MD5;
 
 const add = (req, res, next) => {
-  if (!validateEmail(req.body.email)) {
-    const error = generateSignupError('Email is not valid');
-    next(error);
-  }
-  if (!validatePassword(req.body.password)) {
-    const error = generateSignupError('Password must be alphanumeric and have at least 8 characters');
-    next(error);
-  }
+  validateSignupFields(req, res, next);
 
   return User.findAll({
     where: {

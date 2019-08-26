@@ -1,11 +1,25 @@
-const validateEmail = email => {
-  const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/;
-  return regexp.test(email);
+/* eslint-disable no-underscore-dangle */
+const Validator = require('schema-validator');
+
+const { userSignUp: userSignUpSchema } = require('../schemas');
+
+const generateSignupError = message => ({
+  message,
+  internalCode: 'signup_error'
+});
+
+const validateSignupFields = (req, res, next) => {
+  const validator = new Validator(userSignUpSchema);
+
+  const check = validator.check(req.body);
+  if (check._error) {
+    if (check.email) {
+      const error = generateSignupError('Email is not valid');
+      next(error);
+    }
+    const error = generateSignupError('Password must be alphanumeric and have at least 8 characters');
+    next(error);
+  }
 };
 
-const validatePassword = password => {
-  const letterNumber = /^[0-9a-zA-Z]+$/;
-  return letterNumber.test(password) && password.length >= 8;
-};
-
-module.exports = { validateEmail, validatePassword };
+module.exports = { validateSignupFields, generateSignupError };
