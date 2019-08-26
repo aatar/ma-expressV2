@@ -1,13 +1,16 @@
-const { User } = require('../models');
-const { validateEmail, validatePassword } = require('../helpers/utils');
+const { User } = require('../models'),
+  { generateSignupError } = require('./common'),
+  { validateEmail, validatePassword } = require('../helpers/utils');
 const md5 = require('crypto-js').MD5;
 
-const add = (req, res) => {
+const add = (req, res, next) => {
   if (!validateEmail(req.body.email)) {
-    res.status(400).send('Email is not valid');
+    const error = generateSignupError('Email is not valid');
+    next(error);
   }
   if (!validatePassword(req.body.password)) {
-    res.status(400).send('Password must be alphanumeric and have at least 8 characters');
+    const error = generateSignupError('Password must be alphanumeric and have at least 8 characters');
+    next(error);
   }
 
   return User.findAll({
@@ -17,18 +20,17 @@ const add = (req, res) => {
   })
     .then(user => {
       if (user.length > 0) {
-        res.status(400).send('Email is already in use');
+        const error = generateSignupError('Email is already in use');
+        next(error);
       }
       return User.create({
         name: req.body.name,
         surname: req.body.surname,
         email: req.body.email,
         password: md5(req.body.password).toString()
-      })
-        .then(userCreated => res.status(201).send(userCreated))
-        .catch(error => res.status(400).send(error));
+      }).then(userCreated => res.status(201).send(userCreated));
     })
-    .catch(error => res.status(400).send(error));
+    .catch(error => next(error));
 };
 
 module.exports = { add };
