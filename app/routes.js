@@ -1,6 +1,6 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
-const { add: addUser } = require('./controllers/user');
+const { addUser } = require('./controllers/user');
 const {
   EMAIL_REGEXP,
   PASSWORD_REGEXP,

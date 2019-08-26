@@ -1,22 +1,25 @@
 const { User } = require('../models'),
-  { generateSignupError } = require('../helpers/utils'),
-  { signUpMapper } = require('../mappers/user');
+  { signupError } = require('../errors'),
+  { signUpMapper } = require('../mappers/user'),
+  logger = require('../logger');
 
-const add = (req, res, next) =>
-  User.findOne({
+exports.addUser = (req, res, next) => {
+  logger.info('Searching user...');
+  return User.findOne({
     where: {
       email: req.body.email
     }
   })
     .then(user => {
       if (user) {
-        const error = generateSignupError('Email is already in use');
+        const error = signupError('Email is already in use');
         next(error);
       }
+      logger.info('Email is new.');
       signUpMapper(req.body).then(mappedUser => {
-        User.create(mappedUser).then(userCreated => res.status(201).send(userCreated));
+        logger.info('Creating user...');
+        return User.create(mappedUser).then(userCreated => res.status(201).send(userCreated));
       });
     })
     .catch(error => next(error));
-
-module.exports = { add };
+};
