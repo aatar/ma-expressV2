@@ -4,11 +4,28 @@ const {
     findAlbumsById: findAlbumsByIdService
   } = require('../services/jsonplaceholder'),
   logger = require('../logger'),
-  { AlbumUser } = require('../models');
+  { AlbumUser, User } = require('../models');
 
 exports.listAlbums = (req, res, next) => {
   logger.info('Listing albums...');
   return listAlbumsService()
+    .then(response => res.send(response))
+    .catch(next);
+};
+
+exports.listBoughtAlbums = (req, res, next) => {
+  logger.info('Searching for bought albums');
+  AlbumUser.findAll({
+    user_id: req.params.id,
+    attributes: ['id', 'album_id', 'album_title', 'user_id'],
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name', 'surname', 'email']
+      }
+    ]
+  })
     .then(response => res.send(response))
     .catch(next);
 };

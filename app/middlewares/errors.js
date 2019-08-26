@@ -9,6 +9,7 @@ const statusCodes = {
   [errors.SIGNUP_ERROR]: 409,
   [errors.SIGNIN_ERROR]: 401,
   [errors.NOT_LOGGED_ERROR]: 401,
+  [errors.NOT_HAS_ACCESS_ERROR]: 401,
   [errors.SCHEMA_ERROR]: 422,
   [errors.ALREADY_BOUGHT_ALBUM_ERROR]: 409
 };
