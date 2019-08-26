@@ -23,3 +23,6 @@ exports.notLoggedError = message => internalError(message, exports.NOT_LOGGED_ER
 
 exports.ALREADY_BOUGHT_ALBUM_ERROR = 'already_bought_album_error';
 exports.alreadyBoughtAlbumError = message => internalError(message, exports.ALREADY_BOUGHT_ALBUM_ERROR);
+
+exports.NOT_HAS_ACCESS_ERROR = 'not_has_access';
+exports.notHasAccessError = message => internalError(message, exports.NOT_HAS_ACCESS_ERROR);
