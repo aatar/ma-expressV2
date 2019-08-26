@@ -1,25 +1,34 @@
-const userSignUp = {
+exports.userSignUp = {
   name: {
-    type: String,
-    required: true
+    in: ['body'],
+    notEmpty: true,
+    errorMessage: 'Missing name'
   },
   surname: {
-    type: String,
-    required: true
+    in: ['body'],
+    notEmpty: true,
+    errorMessage: 'Missing surname'
   },
   email: {
-    type: String,
-    required: true,
-    test: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/
+    in: ['body'],
+    notEmpty: true,
+    errorMessage: 'Missing email',
+    matches: {
+      options: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/,
+      errorMessage: 'Email is not valid'
+    }
   },
   password: {
-    type: String,
-    required: true,
-    length: {
-      min: 8
+    in: ['body'],
+    notEmpty: true,
+    errorMessage: 'Missing password',
+    isLength: {
+      errorMessage: 'Password should be at least 8 characters long',
+      options: { min: 8 }
     },
-    test: /^[0-9a-zA-Z]+$/
+    matches: {
+      options: /^[0-9a-zA-Z]+$/,
+      errorMessage: 'Password must be alphanumeric'
+    }
   }
 };
-
-module.exports = { userSignUp };
