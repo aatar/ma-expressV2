@@ -1,28 +1,24 @@
 const { User } = require('../models'),
   { generateSignupError } = require('../helpers/utils'),
-  { validateSignupFields } = require('../helpers/utils');
-
-const md5 = require('crypto-js').MD5;
+  { validateSignupFields } = require('../helpers/utils'),
+  { signUpMapper } = require('../mappers/user');
 
 const add = (req, res, next) => {
   validateSignupFields(req, res, next);
 
-  return User.findAll({
+  return User.findOne({
     where: {
       email: req.body.email
     }
   })
     .then(user => {
-      if (user.length > 0) {
+      if (user) {
         const error = generateSignupError('Email is already in use');
         next(error);
       }
-      return User.create({
-        name: req.body.name,
-        surname: req.body.surname,
-        email: req.body.email,
-        password: md5(req.body.password).toString()
-      }).then(userCreated => res.status(201).send(userCreated));
+      signUpMapper(req.body).then(mappedUser => {
+        User.create(mappedUser).then(userCreated => res.status(201).send(userCreated));
+      });
     })
     .catch(error => next(error));
 };
