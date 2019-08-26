@@ -1,12 +1,9 @@
 const { User } = require('../models'),
   { generateSignupError } = require('../helpers/utils'),
-  { validateSignupFields } = require('../helpers/utils'),
   { signUpMapper } = require('../mappers/user');
 
-const add = (req, res, next) => {
-  validateSignupFields(req, res, next);
-
-  return User.findOne({
+const add = (req, res, next) =>
+  User.findOne({
     where: {
       email: req.body.email
     }
@@ -21,6 +18,5 @@ const add = (req, res, next) => {
       });
     })
     .catch(error => next(error));
-};
 
 module.exports = { add };
