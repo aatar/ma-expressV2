@@ -1,5 +1,5 @@
 const { User } = require('../models'),
-  { signupError } = require('../errors'),
+  { conflictError } = require('../errors'),
   { signUpMapper } = require('../mappers/user'),
   logger = require('../logger');
 
@@ -12,14 +12,13 @@ exports.addUser = (req, res, next) => {
   })
     .then(user => {
       if (user) {
-        const error = signupError('Email is already in use');
-        next(error);
+        throw conflictError('Email is already in use');
       }
       logger.info('Email is new.');
-      signUpMapper(req.body).then(mappedUser => {
+      return signUpMapper(req.body).then(mappedUser => {
         logger.info('Creating user...');
         return User.create(mappedUser).then(userCreated => res.status(201).send(userCreated));
       });
     })
-    .catch(error => next(error));
+    .catch(next);
 };
