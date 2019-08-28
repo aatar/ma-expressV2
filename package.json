@@ -57,13 +57,16 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "crypto-js": "^3.1.9-1",
     "express": "^4.16.2",
+    "express-validator": "^6.1.1",
     "express-wolox-logger": "0.0.2",
     "jwt-simple": "^0.5.1",
     "node-fetch": "^2.6.0",
     "pg": "^7.4.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "schema-validator": "^3.3.1",
     "sequelize": "^4.34.0",
     "umzug": "^2.1.0"
   },
