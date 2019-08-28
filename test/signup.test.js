@@ -40,12 +40,11 @@ describe('POST /users', () => {
   });
 
   test('arguments missing', async () => {
+    const user = { ...defaultUser };
+    delete user.surname;
     const response = await request(app)
       .post('/users')
-      .send({
-        ...defaultUser,
-        surname: null
-      })
+      .send(user)
       .set('Accept', 'application/json');
     expect(response.statusCode).toBe(422);
   });
