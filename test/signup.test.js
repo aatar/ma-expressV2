@@ -3,10 +3,6 @@ const app = require('../app');
 const { defaultUser } = require('./constants');
 
 describe('POST /users', () => {
-  beforeAll(() => {
-    request(app).delete('/users');
-  });
-
   test('should insert user', async () => {
     const response = await request(app)
       .post('/users')
@@ -47,9 +43,8 @@ describe('POST /users', () => {
     const response = await request(app)
       .post('/users')
       .send({
-        name: defaultUser.name,
-        email: defaultUser.email,
-        password: defaultUser.password
+        ...defaultUser,
+        surname: null
       })
       .set('Accept', 'application/json');
     expect(response.statusCode).toBe(422);
