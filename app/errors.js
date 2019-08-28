@@ -12,8 +12,5 @@ exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
 exports.SIGNUP_ERROR = 'signup_error';
 exports.signupError = message => internalError(message, exports.SIGNUP_ERROR);
 
-exports.CONFLICT_ERROR = 'conflict_error';
-exports.conflictError = message => internalError(message, exports.CONFLICT_ERROR);
-
 exports.SCHEMA_ERROR = 'schema_error';
 exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
