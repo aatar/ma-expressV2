@@ -17,4 +17,5 @@ exports.init = app => {
   app.get('/users', [checkIfUserIsLogged], listUsers);
   app.post('/admin/users', [checkIfUserIsAdmin], addAdmin);
   app.get('/users/:id/albums', [checkIfUserIsLogged, checkIfUserHasAccess], listBoughtAlbums);
+  app.get('/users/albums/:id/photos', [checkIfUserIsLogged, checkIfUserBoughtAlbum], listPhotos);
 };
