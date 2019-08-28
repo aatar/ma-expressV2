@@ -1,5 +1,3 @@
-// const fetch = require('node-fetch');
-// const { shouldNotInsertUser } = require('./helper');
 const request = require('supertest');
 const app = require('../app');
 const { defaultUser } = require('./constants');
@@ -8,11 +6,6 @@ describe('POST /users', () => {
   beforeAll(() => {
     request(app).delete('/users');
   });
-
-  /* test('It should delete users', async () => {
-    const response = await request(app).delete('/users');
-    expect(response.statusCode).toBe(200);
-  });*/
 
   test('should insert user', async () => {
     const response = await request(app)
@@ -31,7 +24,7 @@ describe('POST /users', () => {
       .post('/users')
       .send(defaultUser)
       .set('Accept', 'application/json');
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(409);
   });
 
   test('password is not valid', async () => {
@@ -39,7 +32,7 @@ describe('POST /users', () => {
       .post('/users')
       .send({ ...defaultUser, password: '234234' })
       .set('Accept', 'application/json');
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(422);
   });
 
   test('email is not valid', async () => {
@@ -47,7 +40,7 @@ describe('POST /users', () => {
       .post('/users')
       .send({ ...defaultUser, email: 'marcos.atar@woleox.com.ar' })
       .set('Accept', 'application/json');
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(422);
   });
 
   test('arguments missing', async () => {
@@ -59,6 +52,6 @@ describe('POST /users', () => {
         password: defaultUser.password
       })
       .set('Accept', 'application/json');
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(422);
   });
 });
