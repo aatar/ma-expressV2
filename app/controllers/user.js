@@ -3,7 +3,8 @@ const { User } = require('../models'),
   { signUpMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger'),
-  jwt = require('jsonwebtoken');
+  jwt = require('jsonwebtoken'),
+  bcrypt = require('bcryptjs');
 
 exports.addUser = (req, res, next) => {
   logger.info('Searching user...');
