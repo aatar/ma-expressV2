@@ -1,6 +1,7 @@
 const { User } = require('../models'),
   { conflictError } = require('../errors'),
   { signUpMapper } = require('../mappers/user'),
+  { serializeUser } = require('../serializers/user'),
   logger = require('../logger');
 
 exports.addUser = (req, res, next) => {
@@ -17,7 +18,7 @@ exports.addUser = (req, res, next) => {
       logger.info('Email is new.');
       return signUpMapper(req.body).then(mappedUser => {
         logger.info('Creating user...');
-        return User.create(mappedUser).then(userCreated => res.status(201).send(userCreated));
+        return User.create(mappedUser).then(userCreated => res.status(201).send(serializeUser(userCreated)));
       });
     })
     .catch(next);
