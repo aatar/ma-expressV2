@@ -1,18 +1,24 @@
 exports.userSignUp = {
   name: {
     in: ['body'],
-    notEmpty: true,
-    errorMessage: 'Missing name'
+    isLength: {
+      errorMessage: 'Missing name',
+      options: { min: 1 }
+    }
   },
   surname: {
     in: ['body'],
-    notEmpty: true,
-    errorMessage: 'Missing surname'
+    isLength: {
+      errorMessage: 'Missing surname',
+      options: { min: 1 }
+    }
   },
   email: {
     in: ['body'],
-    notEmpty: true,
-    errorMessage: 'Missing email',
+    isLength: {
+      errorMessage: 'Missing email',
+      options: { min: 1 }
+    },
     matches: {
       options: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/,
       errorMessage: 'Email is not valid'
@@ -20,8 +26,6 @@ exports.userSignUp = {
   },
   password: {
     in: ['body'],
-    notEmpty: true,
-    errorMessage: 'Missing password',
     isLength: {
       errorMessage: 'Password should be at least 8 characters long',
       options: { min: 8 }

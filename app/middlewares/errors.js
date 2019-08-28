@@ -7,6 +7,7 @@ const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.DEFAULT_ERROR]: 500,
   [errors.SIGNUP_ERROR]: 422,
+  [errors.SCHEMA_ERROR]: 422,
   [errors.CONFLICT_ERROR]: 409
 };
 
