@@ -11,10 +11,11 @@ exports.userSignUp = {
   },
   email: {
     in: ['body'],
-    isString: true,
+    isEmail: true,
     errorMessage: 'Missing email',
-    matches: {
-      options: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/,
+    custom: {
+      options: value =>
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@wolox.com.ar$/.test(value),
       errorMessage: 'Email is not valid'
     }
   },
