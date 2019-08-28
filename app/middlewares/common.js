@@ -4,7 +4,6 @@ const { schemaError } = require('../errors');
 
 exports.validateResult = (req, res, next) => {
   const errors = validationResult(req);
-  // res.send(errors);
   if (!errors.isEmpty()) {
     return next(schemaError(errors.errors.map(error => error.msg)));
   }
