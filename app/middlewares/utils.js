@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 const { User } = require('../models'),
-  { notLoggedError } = require('../errors'),
+  { notLoggedError, signOutError } = require('../errors'),
   logger = require('../logger'),
   jwt = require('jsonwebtoken'),
   { TOKEN_START } = require('../constants');
@@ -21,6 +21,9 @@ exports.verifyJWT = (req, authorizationToken, admin) => {
           }
         })
           .then(user => {
+            if (user.signout_datetime && new Date(decoded.issued_at) < new Date(user.signout_datetime)) {
+              return reject(signOutError('You signed out'));
+            }
             logger.info('Search finished.');
             req.user = user;
             return user ? resolve() : reject(getNotLoggedError(admin));

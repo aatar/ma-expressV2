@@ -21,6 +21,9 @@ exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
 exports.NOT_LOGGED_ERROR = 'not_logged_error';
 exports.notLoggedError = message => internalError(message, exports.NOT_LOGGED_ERROR);
 
+exports.SIGNOUT_ERROR = 'signout_error';
+exports.signoutError = message => internalError(message, exports.SIGNOUT_ERROR);
+
 exports.ALREADY_BOUGHT_ALBUM_ERROR = 'already_bought_album_error';
 exports.alreadyBoughtAlbumError = message => internalError(message, exports.ALREADY_BOUGHT_ALBUM_ERROR);
 
