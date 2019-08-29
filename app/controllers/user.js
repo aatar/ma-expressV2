@@ -1,47 +1,39 @@
-const { User } = require('../models');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const { User } = require('../models'),
+  { signupError } = require('../errors'),
+  { signUpMapper } = require('../mappers/user'),
+  { serializeUser } = require('../serializers/user'),
+  logger = require('../logger'),
+  jwt = require('jsonwebtoken'),
+  bcrypt = require('bcryptjs');
 
-const add = (req, res) =>
-  User.findAll({
+exports.addUser = (req, res, next) => {
+  logger.info('Searching user...');
+  return User.findOne({
     where: {
       email: req.body.email
     }
   })
     .then(user => {
-      if (user.length > 0) {
-        res.status(400).send('Email is already in use');
+      if (user) {
+        throw signupError('Email is already in use');
       }
-      bcrypt.hash(req.body.password, 10).then(hashedPassword =>
-        User.create({
-          name: req.body.name,
-          surname: req.body.surname,
-          email: req.body.email,
-          password: hashedPassword
-        })
-          .then(() => res.status(201).send('OK'))
-          .catch(error => res.status(400).send(error))
-      );
+      logger.info('Email is new.');
+      return signUpMapper(req.body).then(mappedUser => {
+        logger.info('Creating user...');
+        return User.create(mappedUser).then(userCreated => res.status(201).send(serializeUser(userCreated)));
+      });
     })
-    .catch(error => res.status(400).send(error));
+    .catch(next);
+};
 
-const deleteAll = (req, res) =>
-  User.destroy({
-    truncate: true
-  })
-    .then(() => res.status(200).send('Deleted All'))
-    .catch(error => res.status(400).send(error));
-
-const login = (req, res) => {
-  User.findAll({
+exports.login = (req, res) => {
+  User.findOne({
     where: {
       email: req.body.email
     }
   })
     .then(user => {
-      if (user.length <= 0) {
-        res.status(400).send('Email or password is incorrect');
-      } else {
+      if (user) {
         bcrypt.compare(req.body.password, user[0].password, (err, areEquals) => {
           if (areEquals) {
             const token = jwt.sign({ email: req.body.email }, process.env.PRIVATE_KEY, {
@@ -52,12 +44,12 @@ const login = (req, res) => {
               .set('Authorization', `Bearer ${token}`)
               .send('OK');
           } else {
-            res.status(400).send('Password is incorrect');
+            throw signupError('Email or password is incorrect');
           }
         });
+      } else {
+        throw signupError('Email or password is incorrect');
       }
     })
     .catch(error => res.status(400).send(error));
 };
-
-module.exports = { add, deleteAll, login };

@@ -1,18 +1,15 @@
-// const controller = require('./controllers/controller');
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listPhotos } = require('./controllers/album');
-const { add: addUser, deleteAll: deleteUsers, login } = require('./controllers/user');
-const { add: addUserMiddleware, login: loginMiddleware } = require('./middlewares/user');
+const { addUser, login } = require('./controllers/user');
+const { validateSchema } = require('./middlewares/common');
+const { login: loginMiddleware } = require('./middlewares/user');
+const schemas = require('./schemas');
 
 exports.init = app => {
-  app.get('/', (req, res) => res.status(200).send('Welcome!!'));
+  app.get('/', (req, res) => res.send('Welcome to Heroku'));
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
   app.get('/albums/:id/photos', listPhotos);
-  app.post('/users', addUserMiddleware, addUser);
-  app.delete('/users', deleteUsers);
+  app.post('/users', [validateSchema(schemas.userSignUp)], addUser);
   app.post('/users/sessions', loginMiddleware, login);
-  // app.get('/endpoint/get/path', [], controller.methodGET);
-  // app.put('/endpoint/put/path', [], controller.methodPUT);
-  // app.post('/endpoint/post/path', [], controller.methodPOST);
 };
