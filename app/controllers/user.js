@@ -56,3 +56,18 @@ exports.login = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.invalidateSessions = (req, res, next) => {
+  logger.info('Searching user...');
+  return User.findById(req.params.userId)
+    .then(user => {
+      logger.info('Updating user...');
+      return user
+        .update({
+          signout_datetime: Date()
+        })
+        .then(() => res.status(200).send('OK'))
+        .catch(next);
+    })
+    .catch(next);
+};

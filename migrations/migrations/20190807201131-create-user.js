@@ -30,6 +30,10 @@ module.exports = {
         defaultValue: false,
         type: Sequelize.BOOLEAN
       },
+      signout_datetime: {
+        defaultValue: null,
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
