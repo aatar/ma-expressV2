@@ -1,9 +1,8 @@
-require('dotenv').config();
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 
-/* if (ENVIRONMENT !== 'production') {
+if (ENVIRONMENT !== 'production') {
   require('dotenv').config();
-}*/
+}
 
 const configFile = `./${ENVIRONMENT}`;
 
