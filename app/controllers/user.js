@@ -37,6 +37,7 @@ exports.login = (req, res, next) => {
       if (user) {
         bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
           if (areEquals) {
+            logger.info('Logged in');
             const { name, surname, email, password } = user;
             const token = jwt.sign({ name, surname, email, password }, process.env.PRIVATE_KEY, {
               algorithm: 'HS256'
