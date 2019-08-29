@@ -41,8 +41,7 @@ exports.login = (req, res, next) => {
       bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
         if (areEquals) {
           logger.info('Logged in');
-          const { name, surname, email, password } = user;
-          const token = signJWT({ name, surname, email, password });
+          const token = signJWT(JSON.stringify(user));
           return res.set('Authorization', `Bearer ${token}`).send('Logged in');
         }
         return next(signinError('Email or password is incorrect'));
