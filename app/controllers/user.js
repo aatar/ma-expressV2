@@ -44,7 +44,7 @@ exports.login = (req, res, next) => {
             });
             return res.set('Authorization', `Bearer ${token}`).send('Logged in');
           }
-          throw signinError('Email or password is incorrect');
+          return next(signinError('Email or password is incorrect'));
         });
       } else {
         throw signinError('Email is not registered in the system');

@@ -48,6 +48,6 @@ describe('POST /users/sessions', () => {
       .post('/users/sessions')
       .send(user)
       .set('Accept', 'application/json');
-    expect(response.statusCode).toBe(402);
+    expect(response.statusCode).toBe(401);
   });
 });
