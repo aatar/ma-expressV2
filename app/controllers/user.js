@@ -37,7 +37,8 @@ exports.login = (req, res, next) => {
       if (user) {
         bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
           if (areEquals) {
-            const token = jwt.sign({ email: req.body.email }, process.env.PRIVATE_KEY, {
+            const { name, surname, email, password } = user;
+            const token = jwt.sign({ name, surname, email, password }, process.env.PRIVATE_KEY, {
               algorithm: 'HS256'
             });
             return res.set('Authorization', `Bearer ${token}`).send('Logged in');
@@ -45,7 +46,7 @@ exports.login = (req, res, next) => {
           throw signinError('Email or password is incorrect');
         });
       } else {
-        throw signinError('Email or password is incorrect');
+        throw signinError('Email is not registered in the system');
       }
     })
     .catch(next);
