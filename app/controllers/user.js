@@ -3,7 +3,7 @@ const { User } = require('../models'),
   { signUpMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger'),
-  jwt = require('jsonwebtoken'),
+  { signJWT } = require('./utils'),
   bcrypt = require('bcryptjs');
 
 exports.addUser = (req, res, next) => {
@@ -34,21 +34,19 @@ exports.login = (req, res, next) => {
     }
   })
     .then(user => {
-      if (user) {
-        bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
-          if (areEquals) {
-            logger.info('Logged in');
-            const { name, surname, email, password } = user;
-            const token = jwt.sign({ name, surname, email, password }, process.env.PRIVATE_KEY, {
-              algorithm: 'HS256'
-            });
-            return res.set('Authorization', `Bearer ${token}`).send('Logged in');
-          }
-          return next(signinError('Email or password is incorrect'));
-        });
-      } else {
+      if (!user) {
         throw signinError('Email is not registered in the system');
       }
+
+      bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
+        if (areEquals) {
+          logger.info('Logged in');
+          const { name, surname, email, password } = user;
+          const token = signJWT({ name, surname, email, password });
+          return res.set('Authorization', `Bearer ${token}`).send('Logged in');
+        }
+        return next(signinError('Email or password is incorrect'));
+      });
     })
     .catch(next);
 };
