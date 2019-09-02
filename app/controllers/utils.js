@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 exports.signJWT = payload => {
   logger.info('Signing JWT...');
   return jwt.sign(payload, process.env.PRIVATE_KEY, {
-    algorithm: 'HS256'
+    algorithm: 'HS256',
+    expiresIn: process.env.TOKEN_EXPIRATION_TIME
   });
 };
 
