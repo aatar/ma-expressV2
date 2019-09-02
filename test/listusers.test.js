@@ -1,15 +1,20 @@
 const request = require('supertest');
 const app = require('../app');
-const { defaultUser } = require('./constants');
+const { factory } = require('factory-girl');
+
+let user = null;
+
+beforeAll(async () => {
+  const userFactoryGirlResponse = await factory.build('User');
+  user = userFactoryGirlResponse.dataValues;
+});
 
 describe('GET /users', () => {
   test('token missing', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
-
-    const user = { ...defaultUser };
     await request(app)
       .post('/users/sessions')
       .send(user)
@@ -21,10 +26,8 @@ describe('GET /users', () => {
   test('invalid token', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
-
-    const user = { ...defaultUser };
     await request(app)
       .post('/users/sessions')
       .send(user)
@@ -38,10 +41,8 @@ describe('GET /users', () => {
   test('should list users', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
-
-    const user = { ...defaultUser };
     const loginResponse = await request(app)
       .post('/users/sessions')
       .send(user)

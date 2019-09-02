@@ -1,15 +1,20 @@
 const request = require('supertest');
 const app = require('../app');
-const { defaultUser } = require('./constants');
+const { factory } = require('factory-girl');
+
+let user = null;
+
+beforeAll(async () => {
+  const userFactoryGirlResponse = await factory.build('User');
+  user = userFactoryGirlResponse.dataValues;
+});
 
 describe('POST /users/sessions', () => {
   test('should login', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
-
-    const user = { ...defaultUser };
     const response = await request(app)
       .post('/users/sessions')
       .send(user)
@@ -20,13 +25,13 @@ describe('POST /users/sessions', () => {
   test('incorrect email', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
 
-    const user = { ...defaultUser, email: 'marcos.atar32@wolox.com.ar' };
+    const modifiedUser = { ...user, email: 'marcos.atar32@wolox.com.ar' };
     const response = await request(app)
       .post('/users/sessions')
-      .send(user)
+      .send(modifiedUser)
       .set('Accept', 'application/json');
     expect(response.statusCode).toBe(401);
   });
@@ -34,13 +39,13 @@ describe('POST /users/sessions', () => {
   test('incorrect password', async () => {
     await request(app)
       .post('/users')
-      .send(defaultUser)
+      .send(user)
       .set('Accept', 'application/json');
 
-    const user = { ...defaultUser, password: '1231231234' };
+    const modifiedUser = { ...user, password: '1231231234' };
     const response = await request(app)
       .post('/users/sessions')
-      .send(user)
+      .send(modifiedUser)
       .set('Accept', 'application/json');
     expect(response.statusCode).toBe(401);
   });
