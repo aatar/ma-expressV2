@@ -58,7 +58,7 @@ exports.login = (req, res, next) => {
         if (passwordIsFine) {
           logger.info('Logged in');
           const token = signJWT(JSON.stringify(user));
-          return res.set('Authorization', `Bearer ${token}`).send('Logged in');
+          return res.set('Authorization', `${TOKEN_START} ${token}`).send('Logged in');
         }
         throw signinError('Email or password is incorrect');
       });
