@@ -3,8 +3,9 @@ const { User } = require('../models'),
   logger = require('../logger'),
   jwt = require('jsonwebtoken');
 
-const verifyJWTPromise = authorizationToken =>
-  new Promise((resolve, reject) => {
+exports.verifyJWT = authorizationToken => {
+  logger.info('Verifying JWT...');
+  return new Promise((resolve, reject) => {
     jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
       if (decoded && decoded.email && decoded.password) {
         logger.info('Searching user...');
@@ -25,8 +26,4 @@ const verifyJWTPromise = authorizationToken =>
       return reject(notLoggedError("You don't have access, plase login"));
     });
   });
-
-exports.verifyJWT = authorizationToken => {
-  logger.info('Verifying JWT...');
-  return verifyJWTPromise(authorizationToken);
 };
