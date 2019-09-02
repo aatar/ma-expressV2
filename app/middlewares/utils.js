@@ -17,13 +17,12 @@ exports.verifyJWT = (authorizationToken, req, res, next) => {
       })
         .then(user => {
           if (!user) {
-            throw notLoggedError("You don't have access, plase login");
-          } else {
-            return next();
+            return next(notLoggedError("You don't have access, plase login"));
           }
+          return next();
         })
         .catch(next);
     }
-    throw notLoggedError("You don't have access, plase login");
+    return next(notLoggedError("You don't have access, plase login"));
   });
 };
