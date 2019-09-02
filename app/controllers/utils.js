@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../logger');
+const bcrypt = require('bcryptjs');
 
 exports.signJWT = payload => {
   logger.info('Signing JWT...');
@@ -7,3 +8,5 @@ exports.signJWT = payload => {
     algorithm: 'HS256'
   });
 };
+
+exports.compare = (password, encodedPassword) => bcrypt.compare(password, encodedPassword);

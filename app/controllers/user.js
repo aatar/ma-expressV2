@@ -3,8 +3,7 @@ const { User } = require('../models'),
   { signUpMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger'),
-  { signJWT } = require('./utils'),
-  bcrypt = require('bcryptjs');
+  { signJWT, compare } = require('./utils');
 
 exports.addUser = (req, res, next) => {
   logger.info('Searching user...');
@@ -33,19 +32,18 @@ exports.login = (req, res, next) => {
       email: req.body.email
     }
   })
-    .then(user => {
+    .then(async user => {
       if (!user) {
         throw signinError('Email is not registered in the system');
       }
 
-      bcrypt.compare(req.body.password, user.password, (err, areEquals) => {
-        if (areEquals) {
-          logger.info('Logged in');
-          const token = signJWT(JSON.stringify(user));
-          return res.set('Authorization', `Bearer ${token}`).send('Logged in');
-        }
-        return next(signinError('Email or password is incorrect'));
-      });
+      const passwordIsFine = await compare(req.body.password, user.password);
+      if (passwordIsFine) {
+        logger.info('Logged in');
+        const token = signJWT(JSON.stringify(user));
+        return res.set('Authorization', `Bearer ${token}`).send('Logged in');
+      }
+      throw signinError('Email or password is incorrect');
     })
     .catch(next);
 };
