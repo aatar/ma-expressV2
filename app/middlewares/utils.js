@@ -1,28 +1,32 @@
-/* eslint-disable no-negated-condition */
 const { User } = require('../models'),
   { notLoggedError } = require('../errors'),
   logger = require('../logger'),
   jwt = require('jsonwebtoken');
 
-exports.verifyJWT = (authorizationToken, req, res, next) => {
-  logger.info('Verifying JWT...');
-  jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
-    if (decoded && decoded.email && decoded.password) {
-      logger.info('Searching user...');
-      return User.findOne({
-        where: {
-          email: decoded.email,
-          password: decoded.password
-        }
-      })
-        .then(user => {
-          if (!user) {
-            return next(notLoggedError("You don't have access, plase login"));
+const verifyJWTPromise = authorizationToken =>
+  new Promise((resolve, reject) => {
+    jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
+      if (decoded && decoded.email && decoded.password) {
+        logger.info('Searching user...');
+        return User.findOne({
+          where: {
+            email: decoded.email,
+            password: decoded.password
           }
-          return next();
         })
-        .catch(next);
-    }
-    return next(notLoggedError("You don't have access, plase login"));
+          .then(user => {
+            if (!user) {
+              reject(notLoggedError("You don't have access, plase login"));
+            }
+            resolve();
+          })
+          .catch(reject);
+      }
+      return reject(notLoggedError("You don't have access, plase login"));
+    });
   });
+
+exports.verifyJWT = authorizationToken => {
+  logger.info('Verifying JWT...');
+  return verifyJWTPromise(authorizationToken);
 };

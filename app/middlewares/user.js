@@ -8,5 +8,7 @@ exports.checkIfUserIsLogged = (req, res, next) => {
     return next(notLoggedError('Missing authorization token'));
   }
   authorizationToken = authorizationToken.substring(TOKEN_START.length);
-  return verifyJWT(authorizationToken, req, res, next);
+  return verifyJWT(authorizationToken)
+    .then(() => next())
+    .catch(next);
 };
