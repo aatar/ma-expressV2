@@ -16,9 +16,9 @@ const verifyJWTPromise = authorizationToken =>
         })
           .then(user => {
             if (!user) {
-              reject(notLoggedError("You don't have access, plase login"));
+              return reject(notLoggedError("You don't have access, plase login"));
             }
-            resolve();
+            return resolve();
           })
           .catch(reject);
       }
