@@ -10,8 +10,6 @@ describe('POST /users/sessions', () => {
       .set('Accept', 'application/json');
 
     const user = { ...defaultUser };
-    delete user.name;
-    delete user.surname;
     const response = await request(app)
       .post('/users/sessions')
       .send(user)
@@ -26,8 +24,6 @@ describe('POST /users/sessions', () => {
       .set('Accept', 'application/json');
 
     const user = { ...defaultUser, email: 'marcos.atar32@wolox.com.ar' };
-    delete user.name;
-    delete user.surname;
     const response = await request(app)
       .post('/users/sessions')
       .send(user)
@@ -42,8 +38,6 @@ describe('POST /users/sessions', () => {
       .set('Accept', 'application/json');
 
     const user = { ...defaultUser, password: '1231231234' };
-    delete user.name;
-    delete user.surname;
     const response = await request(app)
       .post('/users/sessions')
       .send(user)
