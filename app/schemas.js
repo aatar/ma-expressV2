@@ -1,14 +1,4 @@
-exports.userSignUp = {
-  name: {
-    in: ['body'],
-    isString: true,
-    errorMessage: 'Missing name'
-  },
-  surname: {
-    in: ['body'],
-    isString: true,
-    errorMessage: 'Missing surname'
-  },
+exports.userSignIn = {
   email: {
     in: ['body'],
     isEmail: true,
@@ -31,5 +21,19 @@ exports.userSignUp = {
       options: /^[0-9a-zA-Z]+$/,
       errorMessage: 'Password must be alphanumeric'
     }
+  }
+};
+
+exports.userSignUp = {
+  ...exports.userSignIn,
+  name: {
+    in: ['body'],
+    isString: true,
+    errorMessage: 'Missing name'
+  },
+  surname: {
+    in: ['body'],
+    isString: true,
+    errorMessage: 'Missing surname'
   }
 };

@@ -1,8 +1,9 @@
 const { User } = require('../models'),
-  { signupError } = require('../errors'),
+  { signupError, signinError } = require('../errors'),
   { signUpMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
-  logger = require('../logger');
+  logger = require('../logger'),
+  { signJWT, compare } = require('./utils');
 
 exports.addUser = (req, res, next) => {
   logger.info('Searching user...');
@@ -24,9 +25,26 @@ exports.addUser = (req, res, next) => {
     .catch(next);
 };
 
-exports.deleteAll = (req, res, next) =>
-  User.destroy({
-    truncate: true
+exports.login = (req, res, next) => {
+  logger.info('Searching user...');
+  return User.findOne({
+    where: {
+      email: req.body.email
+    }
   })
-    .then(() => res.status(200).send('Deleted All'))
+    .then(user => {
+      if (!user) {
+        throw signinError('Email is not registered in the system');
+      }
+
+      return compare(req.body.password, user.password).then(passwordIsFine => {
+        if (passwordIsFine) {
+          logger.info('Logged in');
+          const token = signJWT(JSON.stringify(user));
+          return res.set('Authorization', `Bearer ${token}`).send('Logged in');
+        }
+        throw signinError('Email or password is incorrect');
+      });
+    })
     .catch(next);
+};
