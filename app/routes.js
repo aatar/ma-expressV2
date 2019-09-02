@@ -12,5 +12,5 @@ exports.init = app => {
   app.get('/albums/:id/photos', listPhotos);
   app.post('/users', [validateSchema(schemas.userSignUp)], addUser);
   app.post('/users/sessions', [validateSchema(schemas.userSignIn)], login);
-  app.get('/users', checkIfUserIsLogged, listUsers);
+  app.get('/users', [checkIfUserIsLogged], listUsers);
 };

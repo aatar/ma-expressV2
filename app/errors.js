@@ -17,3 +17,6 @@ exports.signinError = message => internalError(message, exports.SIGNIN_ERROR);
 
 exports.SCHEMA_ERROR = 'schema_error';
 exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
+
+exports.NOT_LOGGED_ERROR = 'not_logged_error';
+exports.notLoggedError = message => internalError(message, exports.NOT_LOGGED_ERROR);

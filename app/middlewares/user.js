@@ -1,34 +1,37 @@
 /* eslint-disable no-negated-condition */
 const { User } = require('../models'),
-  { reportNotLoggedUser } = require('./utils'),
   { TOKEN_START } = require('../constants'),
+  { notLoggedError } = require('../errors'),
   jwt = require('jsonwebtoken');
 
 exports.checkIfUserIsLogged = (req, res, next) => {
   let authorizationToken = req.headers.authorization;
+  if (!authorizationToken) {
+    throw notLoggedError('Missing authorization token');
+  }
   if (authorizationToken.startsWith(TOKEN_START)) {
     authorizationToken = authorizationToken.substring(TOKEN_START.length);
     jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
       if (decoded && decoded.email && decoded.password) {
-        User.findAll({
+        User.findOne({
           where: {
             email: decoded.email,
             password: decoded.password
           }
         })
           .then(user => {
-            if (user.length <= 0) {
-              reportNotLoggedUser(res);
+            if (!user) {
+              throw notLoggedError("You don't have access, plase login");
             } else {
               next();
             }
           })
-          .catch(error => res.status(400).send(error));
+          .catch(next);
       } else {
-        reportNotLoggedUser(res);
+        throw notLoggedError("You don't have access, plase login");
       }
     });
   } else {
-    reportNotLoggedUser(res);
+    throw notLoggedError("You don't have access, plase login");
   }
 };

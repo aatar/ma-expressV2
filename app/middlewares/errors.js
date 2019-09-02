@@ -8,6 +8,7 @@ const statusCodes = {
   [errors.DEFAULT_ERROR]: 500,
   [errors.SIGNUP_ERROR]: 409,
   [errors.SIGNIN_ERROR]: 401,
+  [errors.NOT_LOGGED_ERROR]: 401,
   [errors.SCHEMA_ERROR]: 422
 };
 
