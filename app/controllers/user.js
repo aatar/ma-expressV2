@@ -32,18 +32,19 @@ exports.login = (req, res, next) => {
       email: req.body.email
     }
   })
-    .then(async user => {
+    .then(user => {
       if (!user) {
         throw signinError('Email is not registered in the system');
       }
 
-      const passwordIsFine = await compare(req.body.password, user.password);
-      if (passwordIsFine) {
-        logger.info('Logged in');
-        const token = signJWT(JSON.stringify(user));
-        return res.set('Authorization', `Bearer ${token}`).send('Logged in');
-      }
-      throw signinError('Email or password is incorrect');
+      return compare(req.body.password, user.password).then(passwordIsFine => {
+        if (passwordIsFine) {
+          logger.info('Logged in');
+          const token = signJWT(JSON.stringify(user));
+          return res.set('Authorization', `Bearer ${token}`).send('Logged in');
+        }
+        throw signinError('Email or password is incorrect');
+      });
     })
     .catch(next);
 };
