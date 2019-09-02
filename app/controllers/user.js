@@ -7,19 +7,19 @@ const { User } = require('../models'),
 
 const { TOKEN_START } = require('../constants');
 
-exports.list = (req, res) => {
+exports.list = (req, res, next) => {
   User.findAndCountAll({ limit: req.query.limit, offset: req.skip })
     .then(results => {
       const itemCount = results.count;
       const pageCount = Math.ceil(results.count / req.query.limit);
-      res.status(200).send({
-        page: results.rows,
+      res.send({
+        page: results.rows.map(user => serializeUser(user)),
         currentPage: req.query.page,
         totalPages: pageCount,
         totalItems: itemCount
       });
     })
-    .catch(error => res.status(400).send(error));
+    .catch(next);
 };
 
 exports.addUser = (req, res, next) => {
