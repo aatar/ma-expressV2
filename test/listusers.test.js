@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const { factory } = require('factory-girl');
+const { createUser, authenticateUser } = require('./utils');
 
 let user = null;
 
@@ -11,27 +12,15 @@ beforeAll(async () => {
 
 describe('GET /users', () => {
   test('token missing', async () => {
-    await request(app)
-      .post('/users')
-      .send(user)
-      .set('Accept', 'application/json');
-    await request(app)
-      .post('/users/sessions')
-      .send(user)
-      .set('Accept', 'application/json');
+    await createUser(user);
+    await authenticateUser(user);
     const response = await request(app).get('/users');
     expect(response.statusCode).toBe(401);
   });
 
   test('invalid token', async () => {
-    await request(app)
-      .post('/users')
-      .send(user)
-      .set('Accept', 'application/json');
-    await request(app)
-      .post('/users/sessions')
-      .send(user)
-      .set('Accept', 'application/json');
+    await createUser(user);
+    await authenticateUser(user);
     const response = await request(app)
       .get('/users')
       .set('Authorization', 'blabla');
@@ -39,14 +28,8 @@ describe('GET /users', () => {
   });
 
   test('should list users', async () => {
-    await request(app)
-      .post('/users')
-      .send(user)
-      .set('Accept', 'application/json');
-    const loginResponse = await request(app)
-      .post('/users/sessions')
-      .send(user)
-      .set('Accept', 'application/json');
+    await createUser(user);
+    const loginResponse = await authenticateUser(user);
     const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
     const response = await request(app)
       .get('/users')
