@@ -5,8 +5,13 @@ const { expressMiddleware, expressRequestIdMiddleware } = require('express-wolox
   config = require('./config'),
   routes = require('./app/routes'),
   errors = require('./app/middlewares/errors'),
-  DEFAULT_BODY_SIZE_LIMIT = 1024 * 1024 * 10,
-  DEFAULT_PARAMETER_LIMIT = 10000;
+  paginate = require('express-paginate'),
+  {
+    DEFAULT_BODY_SIZE_LIMIT,
+    DEFAULT_PARAMETER_LIMIT,
+    PAGINATE_LIMIT,
+    PAGINATE_MAX_LIMIT
+  } = require('./constants');
 
 const bodyParserJsonConfig = () => ({
   parameterLimit: config.common.api.parameterLimit || DEFAULT_PARAMETER_LIMIT,
@@ -27,6 +32,7 @@ app.use('/docs', express.static(path.join(__dirname, 'docs')));
 app.use(bodyParser.json(bodyParserJsonConfig()));
 app.use(bodyParser.urlencoded(bodyParserUrlencodedConfig()));
 app.use(expressRequestIdMiddleware);
+app.use(paginate.middleware(PAGINATE_LIMIT, PAGINATE_MAX_LIMIT));
 
 if (!config.isTesting) {
   app.use(expressMiddleware);

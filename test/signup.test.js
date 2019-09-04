@@ -1,51 +1,40 @@
-const request = require('supertest');
-const app = require('../app');
-const { defaultUser } = require('./constants');
+const { factory } = require('factory-girl');
+const { createUser } = require('./utils');
+
+let user = null;
+
+beforeAll(async () => {
+  const userFactoryGirlResponse = await factory.build('User');
+  user = userFactoryGirlResponse.dataValues;
+});
 
 describe('POST /users', () => {
   test('should insert user', async () => {
-    const response = await request(app)
-      .post('/users')
-      .send(defaultUser)
-      .set('Accept', 'application/json');
+    const response = await createUser(user);
     expect(response.statusCode).toBe(201);
   });
 
   test('already used email', async () => {
-    await request(app)
-      .post('/users')
-      .send(defaultUser)
-      .set('Accept', 'application/json');
-    const response = await request(app)
-      .post('/users')
-      .send(defaultUser)
-      .set('Accept', 'application/json');
+    await createUser(user);
+    const response = await createUser(user);
     expect(response.statusCode).toBe(409);
   });
 
   test('password is not valid', async () => {
-    const response = await request(app)
-      .post('/users')
-      .send({ ...defaultUser, password: '234234' })
-      .set('Accept', 'application/json');
+    const modifiedUser = { ...user, password: '121212' };
+    const response = await createUser(modifiedUser);
     expect(response.statusCode).toBe(422);
   });
 
   test('email is not valid', async () => {
-    const response = await request(app)
-      .post('/users')
-      .send({ ...defaultUser, email: 'marcos.atar@woleox.com.ar' })
-      .set('Accept', 'application/json');
+    const modifiedUser = { ...user, email: 'marcos.atar@woleox.com.ar' };
+    const response = await createUser(modifiedUser);
     expect(response.statusCode).toBe(422);
   });
 
   test('arguments missing', async () => {
-    const user = { ...defaultUser };
     delete user.surname;
-    const response = await request(app)
-      .post('/users')
-      .send(user)
-      .set('Accept', 'application/json');
+    const response = await createUser(user);
     expect(response.statusCode).toBe(422);
   });
 });
