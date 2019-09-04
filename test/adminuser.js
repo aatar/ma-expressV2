@@ -1,5 +1,5 @@
-const { insertUser, insertAdminUser, login, deleteAllUsers } = require('./common');
-const { defaultUser } = require('./constants');
+/* const { insertUser, insertAdminUser, login, deleteAllUsers } = require('./common');
+const { defaultUser } = require('./factories');
 
 test('should insert admin user', async () => {
   await deleteAllUsers();
@@ -60,3 +60,4 @@ test('should not insert admin user', async () => {
   deleteAllUsers();
   expect(response.status).toBe(400);
 });
+*/
