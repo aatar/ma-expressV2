@@ -6,9 +6,8 @@ exports.checkIfUserIsLogged = (req, res, next) => userCheck(req, res, next, fals
 exports.checkIfUserIsAdmin = (req, res, next) => {
   User.findAll().then(users => {
     if (users.length > 0) {
-      userCheck(req, res, next, true);
-    } else {
-      next();
+      return userCheck(req, res, next, true);
     }
+    return next();
   });
 };

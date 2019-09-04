@@ -32,12 +32,11 @@ const add = (req, res, next, admin) => {
     .then(user => {
       if (user) {
         if (admin) {
-          User.update({ admin: true }, { where: { email: req.body.email } })
+          return User.update({ admin: true }, { where: { email: req.body.email } })
             .then(() => res.send('OK'))
             .catch(next);
-        } else {
-          return next(signupError('Email is already in use'));
         }
+        return next(signupError('Email is already in use'));
       }
       logger.info('Email is new.');
       return signUpMapper(req.body).then(mappedUser => {
@@ -50,9 +49,9 @@ const add = (req, res, next, admin) => {
     .catch(next);
 };
 
-exports.addUser = (req, res) => add(req, res, false);
+exports.addUser = (req, res, next) => add(req, res, next, false);
 
-exports.addAdmin = (req, res) => add(req, res, true);
+exports.addAdmin = (req, res, next) => add(req, res, next, true);
 
 exports.login = (req, res, next) => {
   logger.info('Searching user...');

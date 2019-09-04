@@ -29,5 +29,5 @@ exports.checkIfUserIsLogged = (req, res, next, admin) => {
       .then(() => next())
       .catch(next);
   }
-  return exports.reportNotLoggedUser(res, admin);
+  return exports.reportNotLoggedUser(req, res, next, admin);
 };
