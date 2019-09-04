@@ -16,14 +16,12 @@ exports.verifyJWT = authorizationToken => {
           }
         })
           .then(user => {
-            if (!user) {
-              return reject(notLoggedError("You don't have access, plase login"));
-            }
-            return resolve();
+            logger.info('Search finished.');
+            return user ? resolve() : reject(notLoggedError("You don't have access, please login"));
           })
           .catch(reject);
       }
-      return reject(notLoggedError("You don't have access, plase login"));
+      return reject(notLoggedError("You don't have access, please login"));
     });
   });
 };

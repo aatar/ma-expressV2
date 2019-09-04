@@ -12,7 +12,7 @@ exports.list = (req, res, next) => {
     .then(results => {
       const itemCount = results.count;
       const pageCount = Math.ceil(results.count / req.query.limit);
-      res.send({
+      return res.send({
         page: results.rows.map(user => serializeUser(user)),
         currentPage: req.query.page,
         totalPages: pageCount,
