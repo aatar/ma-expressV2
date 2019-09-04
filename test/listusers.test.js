@@ -13,8 +13,15 @@ beforeAll(async () => {
 describe('GET /users', () => {
   test('token missing', async () => {
     await createUser(user);
-    await authenticateUser(user);
-    const response = await request(app).get('/users');
+    let response = '';
+    await Promise.all([
+      authenticateUser(user),
+      // eslint-disable-next-line no-async-promise-executor
+      new Promise(async resolve => {
+        response = await request(app).get('/users');
+        return resolve();
+      })
+    ]);
     expect(response.statusCode).toBe(401);
   });
 
