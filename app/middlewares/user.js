@@ -1,4 +1,4 @@
-const { checkIfUserIsLogged: userCheck } = require('./common'),
+const { checkIfUserIsLogged: userCheck } = require('./utils'),
   { User } = require('../models');
 
 exports.checkIfUserIsLogged = (req, res, next) => userCheck(req, res, next, false);
