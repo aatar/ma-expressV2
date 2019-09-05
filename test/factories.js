@@ -5,5 +5,6 @@ factory.define('User', User, {
   name: 'Ariel',
   surname: 'Atar',
   email: 'marcos.atar@wolox.com.ar',
-  password: '123123123'
+  password: '123123123',
+  admin: false
 });
