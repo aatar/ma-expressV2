@@ -3,21 +3,25 @@ const {
     listPhotos: listPhotosService,
     findAlbumsById: findAlbumsByIdService
   } = require('../services/jsonplaceholder'),
-  { deleteAll: deleteAllService } = require('../services/album'),
+  logger = require('../logger'),
   { AlbumUser } = require('../models');
 
-const listAlbums = (req, res, next) =>
-  listAlbumsService()
+exports.listAlbums = (req, res, next) => {
+  logger.info('Listing albums...');
+  return listAlbumsService()
     .then(response => res.send(response))
-    .catch(err => next(err));
-
-const listPhotos = (req, res, next) =>
-  listPhotosService(req)
+    .catch(next);
+};
+exports.listPhotos = (req, res, next) => {
+  logger.info('Listing photos...');
+  return listPhotosService(req)
     .then(response => res.send(response))
-    .catch(err => next(err));
+    .catch(next);
+};
 
-const buyAlbum = (req, res, next) =>
-  findAlbumsByIdService(req.params.id)
+exports.buyAlbum = (req, res, next) => {
+  logger.info('Listing photos...');
+  return findAlbumsByIdService(req.params.id)
     .then(response => {
       AlbumUser.create({
         user_id: req.params.userId,
@@ -28,10 +32,4 @@ const buyAlbum = (req, res, next) =>
         .catch(next);
     })
     .catch(next);
-
-const deleteAll = (req, res, next) =>
-  deleteAllService()
-    .then(() => res.status(200).send('Deleted All'))
-    .catch(error => next(error));
-
-module.exports = { listAlbums, listPhotos, buyAlbum, deleteAll };
+};

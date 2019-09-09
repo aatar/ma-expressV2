@@ -1,7 +1,8 @@
-const { AlbumUser, User } = require('../models');
+const { AlbumUser, User } = require('../models'),
+  { alreadyBoughtAlbumError } = require('../errors');
 
-const checkIfUserBoughtAlbum = (req, res, next) =>
-  AlbumUser.findAll({
+exports.checkIfUserBoughtAlbum = (req, res, next) =>
+  AlbumUser.findOne({
     where: {
       album_id: req.params.id,
       user_id: req.params.userId
@@ -13,12 +14,10 @@ const checkIfUserBoughtAlbum = (req, res, next) =>
       }
     ]
   })
-    .then(albums => {
-      if (albums && albums.length > 0) {
-        return res.status(400).send('You have already bought that album');
+    .then(album => {
+      if (album) {
+        throw alreadyBoughtAlbumError('You have already bought that album');
       }
       return next();
     })
-    .catch(err => next(err));
-
-module.exports = { checkIfUserBoughtAlbum };
+    .catch(next);

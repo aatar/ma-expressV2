@@ -16,6 +16,6 @@ describe('POST /albums/:id', () => {
     const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
     await buyAlbum(1, token);
     const response = await buyAlbum(1, token);
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(409);
   });
 });
