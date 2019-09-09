@@ -2,7 +2,8 @@
 
 const fs = require('fs'),
   models = require('../app/models'),
-  path = require('path');
+  path = require('path'),
+  { factory } = require('factory-girl');
 
 const tables = Object.values(models.sequelize.models);
 
@@ -29,3 +30,7 @@ const requireAllTestFiles = pathToSearch => {
 };
 
 requireAllTestFiles(normalizedPath);
+
+factory.create('User').then(response => {
+  exports.user = response.dataValues;
+});
