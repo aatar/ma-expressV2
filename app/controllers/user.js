@@ -22,31 +22,29 @@ exports.list = (req, res, next) => {
     .catch(next);
 };
 
-const add = (req, res, next, admin) => {
-  logger.info('Searching user...');
-  return User.findOne({
-    where: {
-      email: req.body.email
-    }
-  })
-    .then(user => {
-      if (user) {
-        if (admin) {
-          return User.update({ admin: true }, { where: { email: req.body.email } })
-            .then(() => res.send('OK'))
-            .catch(next);
-        }
-        return next(signupError('Email is already in use'));
+const add = async (req, res, next, admin) => {
+  try {
+    logger.info('Searching user...');
+    const user = await User.findOne({
+      where: {
+        email: req.body.email
       }
-      logger.info('Email is new.');
-      return signUpMapper({ ...req.body, admin }).then(mappedUser => {
-        logger.info('Creating user...');
-        return User.create(mappedUser)
-          .then(userCreated => res.status(201).send(serializeUser(userCreated)))
-          .catch(next);
-      });
-    })
-    .catch(next);
+    });
+    if (user) {
+      if (admin) {
+        await User.update({ admin: true }, { where: { email: req.body.email } });
+        return res.send('OK, updated');
+      }
+      return next(signupError('Email is already in use'));
+    }
+    logger.info('Email is new.');
+    const mappedUser = await signUpMapper({ ...req.body, admin });
+    logger.info('Creating user...');
+    const createdUser = await User.create(mappedUser);
+    return res.status(201).send(serializeUser(createdUser));
+  } catch (error) {
+    return next(error);
+  }
 };
 
 exports.addUser = (req, res, next) => add(req, res, next, false);
