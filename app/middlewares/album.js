@@ -1,5 +1,5 @@
 const { AlbumUser, User } = require('../models'),
-  { alreadyBoughtAlbumError } = require('../errors');
+  { alreadyBoughtAlbumError, didntBuyAlbumError } = require('../errors');
 
 const userBoughtAlbum = (req, res, next) =>
   AlbumUser.findOne({
@@ -17,7 +17,7 @@ const userBoughtAlbum = (req, res, next) =>
     .then(album => album)
     .catch(next);
 
-exports.checkIfUserBoughtAlbum = (req, res, next) =>
+exports.checkIfUserDidntBuyAlbum = (req, res, next) =>
   userBoughtAlbum(req, res, next)
     .then(response => {
       if (response) {
@@ -25,5 +25,15 @@ exports.checkIfUserBoughtAlbum = (req, res, next) =>
       } else {
         return next();
       }
+    })
+    .catch(next);
+
+exports.checkIfUserBoughtAlbum = (req, res, next) =>
+  userBoughtAlbum(req, res, next)
+    .then(response => {
+      if (response) {
+        return next();
+      }
+      throw didntBuyAlbumError('You did not buy that album');
     })
     .catch(next);

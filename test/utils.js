@@ -32,6 +32,12 @@ exports.listBoughtAlbums = (userId, token) =>
     .set('Accept', 'application/json')
     .set('Authorization', token);
 
+exports.listPhotosBoughtAlbum = (albumId, token) =>
+  request(app)
+    .get(`/users/albums/${albumId}/photos`)
+    .set('Accept', 'application/json')
+    .set('Authorization', token);
+
 exports.user = {
   name: 'Ariel',
   surname: 'Atar',

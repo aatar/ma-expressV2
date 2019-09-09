@@ -3,14 +3,14 @@ const { listAlbums, listBoughtAlbums, listPhotos, buyAlbum } = require('./contro
 const { addUser, addAdmin, login, list: listUsers } = require('./controllers/user');
 const { validateSchema } = require('./middlewares/common');
 const { checkIfUserIsLogged, checkIfUserHasAccess, checkIfUserIsAdmin } = require('./middlewares/user');
-const { checkIfUserBoughtAlbum } = require('./middlewares/album');
+const { checkIfUserBoughtAlbum, checkIfUserDidntBuyAlbum } = require('./middlewares/album');
 const schemas = require('./schemas');
 
 exports.init = app => {
   app.get('/', (req, res) => res.send('Welcome to Heroku'));
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
-  app.post('/albums/:id', [checkIfUserIsLogged, checkIfUserBoughtAlbum], buyAlbum);
+  app.post('/albums/:id', [checkIfUserIsLogged, checkIfUserDidntBuyAlbum], buyAlbum);
   app.get('/albums/:id/photos', listPhotos);
   app.post('/users', [validateSchema(schemas.userSignUp)], addUser);
   app.post('/users/sessions', [validateSchema(schemas.userSignIn)], login);
