@@ -15,10 +15,9 @@ const checkIfUserBoughtAlbum = (req, res, next) =>
   })
     .then(albums => {
       if (albums && albums.length > 0) {
-        res.status(400).send('You have already bought that album');
-      } else {
-        next();
+        return res.status(400).send('You have already bought that album');
       }
+      return next();
     })
     .catch(err => next(err));
 

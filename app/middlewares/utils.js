@@ -8,7 +8,7 @@ const { User } = require('../models'),
 const getNotLoggedError = admin =>
   notLoggedError(admin ? 'You have to be logged in as an admin user' : "You don't have access, please login");
 
-exports.verifyJWT = (authorizationToken, admin) => {
+exports.verifyJWT = (req, authorizationToken, admin) => {
   logger.info('Verifying JWT...');
   return new Promise((resolve, reject) => {
     jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
@@ -22,6 +22,7 @@ exports.verifyJWT = (authorizationToken, admin) => {
         })
           .then(user => {
             logger.info('Search finished.');
+            req.params.userId = user.id;
             return user ? resolve() : reject(getNotLoggedError(admin));
           })
           .catch(reject);
@@ -36,7 +37,7 @@ exports.checkIfUserIsLogged = (req, res, next, admin) => {
   if (authorizationToken && authorizationToken.startsWith(TOKEN_START)) {
     authorizationToken = authorizationToken.substring(TOKEN_START.length);
     return exports
-      .verifyJWT(authorizationToken, admin)
+      .verifyJWT(req, authorizationToken, admin)
       .then(() => next())
       .catch(next);
   }

@@ -25,9 +25,9 @@ const buyAlbum = (req, res, next) =>
         album_title: response.title
       })
         .then(() => res.status(201).send('OK, bought album'))
-        .catch(err => next(err));
+        .catch(next);
     })
-    .catch(err => next(err));
+    .catch(next);
 
 const deleteAll = (req, res, next) =>
   deleteAllService()
