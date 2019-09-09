@@ -1,32 +1,23 @@
-const { createUser, authenticateUser } = require('./utils');
-const { factory } = require('factory-girl');
-
-let user = null;
-
-beforeAll(async () => {
-  const userFactoryGirlResponse = await factory.build('User');
-  user = userFactoryGirlResponse.dataValues;
-});
+const { authenticateUser } = require('./utils');
+const { insertUser } = require('./factories');
 
 describe('POST /users/sessions', () => {
   test('should login', async () => {
-    await createUser(user);
-    const response = await authenticateUser(user);
+    const user = await insertUser();
+    const response = await authenticateUser({ ...user, password: '123123123' });
     expect(response.statusCode).toBe(200);
   });
 
   test('incorrect email', async () => {
-    await createUser(user);
-
-    const modifiedUser = { ...user, email: 'marcos.atar32@wolox.com.ar' };
+    const user = await insertUser();
+    const modifiedUser = { ...user, email: 'marcos.atar32@wolox.com.ar', password: '123123123' };
     const response = await authenticateUser(modifiedUser);
 
     expect(response.statusCode).toBe(401);
   });
 
   test('incorrect password', async () => {
-    await createUser(user);
-
+    const user = await insertUser();
     const modifiedUser = { ...user, password: '1231231234' };
     const response = await authenticateUser(modifiedUser);
     expect(response.statusCode).toBe(401);

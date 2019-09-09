@@ -1,19 +1,12 @@
 const request = require('supertest');
 const app = require('../app');
-const { factory } = require('factory-girl');
-const { createUser, authenticateUser } = require('./utils');
-
-let user = null;
-
-beforeAll(async () => {
-  const userFactoryGirlResponse = await factory.build('User');
-  user = userFactoryGirlResponse.dataValues;
-});
+const { authenticateUser } = require('./utils');
+const { insertUser } = require('./factories');
 
 describe('GET /users', () => {
   test('token missing', async () => {
-    await createUser(user);
     let response = '';
+    const user = await insertUser();
     await Promise.all([
       authenticateUser(user),
       // eslint-disable-next-line no-async-promise-executor
@@ -26,7 +19,7 @@ describe('GET /users', () => {
   });
 
   test('invalid token', async () => {
-    await createUser(user);
+    const user = await insertUser();
     await authenticateUser(user);
     const response = await request(app)
       .get('/users')
@@ -35,8 +28,8 @@ describe('GET /users', () => {
   });
 
   test('should list users', async () => {
-    await createUser(user);
-    const loginResponse = await authenticateUser(user);
+    const user = await insertUser();
+    const loginResponse = await authenticateUser({ ...user, password: '123123123' });
     const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
     const response = await request(app)
       .get('/users')

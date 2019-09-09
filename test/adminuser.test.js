@@ -1,36 +1,37 @@
-const { factory } = require('factory-girl');
-const { createUser, createAdminUser, authenticateUser } = require('./utils');
-
-let user = null;
-let adminUser = null;
-
-beforeAll(async () => {
-  const userFactoryGirlResponse = await factory.build('User');
-  user = userFactoryGirlResponse.dataValues;
-  adminUser = { ...user, admin: true };
-});
+const { createAdminUser, authenticateUser } = require('./utils');
+const { insertUser, insertAdminUser } = require('./factories');
 
 describe('POST /admin/users', () => {
   test('should insert admin user', async () => {
-    await createAdminUser(adminUser);
-    const loginResponse = await authenticateUser(adminUser);
+    const adminUser = await insertAdminUser();
+    const loginResponse = await authenticateUser({ ...adminUser, password: '123123123' });
     const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
-    const response = await createAdminUser({ ...adminUser, email: 'marcos.atar2@wolox.com.ar' }, token);
+    const response = await createAdminUser(
+      { ...adminUser, email: 'marcos.atar4@wolox.com.ar', password: '123123123' },
+      token
+    );
     expect(response.statusCode).toBe(201);
   });
 
   test('should update user to be admin', async () => {
-    await createAdminUser(adminUser);
-    await createUser({ ...user, email: 'marcos.atar2@wolox.com.ar' });
-    const loginResponse = await authenticateUser(adminUser);
+    const user = await insertUser();
+    const adminUser = await insertAdminUser();
+    const loginResponse = await authenticateUser({ ...adminUser, password: '123123123' });
     const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
-    const response = await createAdminUser({ ...user, email: 'marcos.atar2@wolox.com.ar' }, token);
+    const response = await createAdminUser(
+      { ...user, email: 'marcos.atar3@wolox.com.ar', password: '123123123' },
+      token
+    );
     expect(response.statusCode).toBe(200);
   });
 
   test('should not insert admin user', async () => {
-    await createAdminUser(adminUser);
-    const response = await createAdminUser({ ...adminUser, email: 'marcos.atar2@wolox.com.ar' });
+    const adminUser = await insertAdminUser();
+    const response = await createAdminUser({
+      ...adminUser,
+      email: 'marcos.atar3@wolox.com.ar',
+      password: '123123123'
+    });
     expect(response.statusCode).toBe(401);
   });
 });

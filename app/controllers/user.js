@@ -39,7 +39,7 @@ const add = (req, res, next, admin) => {
         return next(signupError('Email is already in use'));
       }
       logger.info('Email is new.');
-      return signUpMapper(req.body).then(mappedUser => {
+      return signUpMapper({ ...req.body, admin }).then(mappedUser => {
         logger.info('Creating user...');
         return User.create(mappedUser)
           .then(userCreated => res.status(201).send(serializeUser(userCreated)))

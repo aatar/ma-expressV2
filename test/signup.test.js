@@ -1,22 +1,10 @@
-const { factory } = require('factory-girl');
-const { createUser } = require('./utils');
-
-let user = null;
-
-beforeAll(async () => {
-  const userFactoryGirlResponse = await factory.build('User');
-  user = userFactoryGirlResponse.dataValues;
-});
+const { createUser, user } = require('./utils');
+const { insertUser } = require('./factories');
 
 describe('POST /users', () => {
-  test('should insert user', async () => {
-    const response = await createUser(user);
-    expect(response.statusCode).toBe(201);
-  });
-
   test('already used email', async () => {
-    await createUser(user);
-    const response = await createUser(user);
+    const userFG = await insertUser();
+    const response = await createUser({ ...userFG, password: '123123123' });
     expect(response.statusCode).toBe(409);
   });
 
@@ -27,14 +15,13 @@ describe('POST /users', () => {
   });
 
   test('email is not valid', async () => {
-    const modifiedUser = { ...user, email: 'marcos.atar@woleox.com.ar' };
+    const modifiedUser = { ...user, email: 'marcos.atar@woleox.com.ar', password: '123123123' };
     const response = await createUser(modifiedUser);
     expect(response.statusCode).toBe(422);
   });
 
   test('arguments missing', async () => {
-    delete user.surname;
-    const response = await createUser(user);
+    const response = await createUser({ email: 'blabla@wolox.com.ar' });
     expect(response.statusCode).toBe(422);
   });
 });
