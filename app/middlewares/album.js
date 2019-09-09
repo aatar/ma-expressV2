@@ -5,12 +5,12 @@ exports.checkIfUserBoughtAlbum = (req, res, next) =>
   AlbumUser.findOne({
     where: {
       album_id: req.params.id,
-      user_id: req.params.userId
+      user_id: req.params.user.id
     },
     include: [
       {
         model: User,
-        as: 'albumUsers'
+        as: 'user'
       }
     ]
   })

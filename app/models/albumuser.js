@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
   AlbumUser.associate = models => {
     AlbumUser.belongsTo(models.User, {
       foreignKey: 'user_id',
-      as: 'albumUsers'
+      as: 'user'
     });
   };
   return AlbumUser;

@@ -24,7 +24,7 @@ exports.list = (req, res, next) => {
 
 const add = (req, res, next, admin) => {
   logger.info('Calling to interactor...');
-  addInteractor(req, admin)
+  return addInteractor(req, admin)
     .then(response => res.status(201).send(response))
     .catch(next);
 };

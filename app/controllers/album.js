@@ -43,7 +43,7 @@ exports.buyAlbum = (req, res, next) => {
   return findAlbumsByIdService(req.params.id)
     .then(response => {
       AlbumUser.create({
-        user_id: req.params.userId,
+        user_id: req.params.user.id,
         album_id: response.id,
         album_title: response.title
       })
