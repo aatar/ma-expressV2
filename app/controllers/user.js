@@ -1,6 +1,6 @@
 const { User } = require('../models'),
-  { signupError, signinError } = require('../errors'),
-  { signUpMapper } = require('../mappers/user'),
+  { signinError } = require('../errors'),
+  { add: addInteractor } = require('../interactors/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger'),
   { signJWT, compare } = require('./utils');
@@ -22,29 +22,11 @@ exports.list = (req, res, next) => {
     .catch(next);
 };
 
-const add = async (req, res, next, admin) => {
-  try {
-    logger.info('Searching user...');
-    const user = await User.findOne({
-      where: {
-        email: req.body.email
-      }
-    });
-    if (user) {
-      if (admin) {
-        await User.update({ admin: true }, { where: { email: req.body.email } });
-        return res.send('OK, updated');
-      }
-      return next(signupError('Email is already in use'));
-    }
-    logger.info('Email is new.');
-    const mappedUser = await signUpMapper({ ...req.body, admin });
-    logger.info('Creating user...');
-    const createdUser = await User.create(mappedUser);
-    return res.status(201).send(serializeUser(createdUser));
-  } catch (error) {
-    return next(error);
-  }
+const add = (req, res, next, admin) => {
+  logger.info('Calling to interactor...');
+  addInteractor(req, admin)
+    .then(response => res.status(201).send(response))
+    .catch(next);
 };
 
 exports.addUser = (req, res, next) => add(req, res, next, false);

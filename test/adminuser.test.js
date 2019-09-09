@@ -22,7 +22,7 @@ describe('POST /admin/users', () => {
       { ...user, email: 'marcos.atar3@wolox.com.ar', password: '123123123' },
       token
     );
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(201);
   });
 
   test('should not insert admin user', async () => {

@@ -1,30 +1,26 @@
 const { User } = require('../models'),
   { signupError } = require('../errors'),
-  { signUpMapper } = require('../mappers/user'),
+  { userMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger');
 
-exports.add = (req, res, next, admin) =>
-  User.findOne({
+exports.add = async (req, admin) => {
+  const mappedUser = await userMapper({ ...req.body, admin });
+  if (admin) {
+    await User.upsert(mappedUser);
+    return serializeUser(mappedUser);
+  }
+  logger.info('Searching user...');
+  const user = await User.findOne({
     where: {
       email: req.body.email
     }
-  })
-    .then(user => {
-      if (user) {
-        if (admin) {
-          return User.update({ admin: true }, { where: { email: req.body.email } })
-            .then(() => res.send('OK'))
-            .catch(next);
-        }
-        return next(signupError('Email is already in use'));
-      }
-      logger.info('Email is new.');
-      return signUpMapper({ ...req.body, admin }).then(mappedUser => {
-        logger.info('Creating user...');
-        return User.create(mappedUser)
-          .then(userCreated => res.status(201).send(serializeUser(userCreated)))
-          .catch(next);
-      });
-    })
-    .catch(next);
+  });
+  if (user) {
+    throw signupError('Email is already in use');
+  }
+  logger.info('Email is new.');
+  logger.info('Creating user...');
+  const createdUser = await User.create(mappedUser);
+  return serializeUser(createdUser);
+};
