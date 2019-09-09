@@ -12,14 +12,22 @@ factory.define('User', User, user, {
 });
 
 exports.insertUser = async () => {
-  const userFactoryGirlResponse = await factory.create('User');
-  return userFactoryGirlResponse.dataValues;
+  try {
+    const userFactoryGirlResponse = await factory.create('User');
+    return userFactoryGirlResponse.dataValues;
+  } catch (error) {
+    return error;
+  }
 };
 
 exports.insertAdminUser = async () => {
-  const adminUserFactoryGirlResponse = await factory.create('User', {
-    email: 'marcos.atar3@wolox.com.ar',
-    admin: true
-  });
-  return adminUserFactoryGirlResponse.dataValues;
+  try {
+    const adminUserFactoryGirlResponse = await factory.create('User', {
+      email: 'marcos.atar3@wolox.com.ar',
+      admin: true
+    });
+    return adminUserFactoryGirlResponse.dataValues;
+  } catch (error) {
+    return error;
+  }
 };
