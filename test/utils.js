@@ -7,8 +7,23 @@ exports.createUser = user =>
     .send(user)
     .set('Accept', 'application/json');
 
+exports.createAdminUser = (user, token = null) =>
+  request(app)
+    .post('/admin/users')
+    .send(user)
+    .set('Accept', 'application/json')
+    .set('Authorization', token);
+
 exports.authenticateUser = user =>
   request(app)
     .post('/users/sessions')
     .send(user)
     .set('Accept', 'application/json');
+
+exports.user = {
+  name: 'Ariel',
+  surname: 'Atar',
+  email: 'marcos.atar2@wolox.com.ar',
+  password: '123123123',
+  admin: false
+};
