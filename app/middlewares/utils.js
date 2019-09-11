@@ -22,7 +22,7 @@ exports.verifyJWT = (req, authorizationToken, admin) => {
         })
           .then(user => {
             logger.info('Search finished.');
-            req.params.userId = user.id;
+            req.params.user = user;
             return user ? resolve() : reject(getNotLoggedError(admin));
           })
           .catch(reject);
