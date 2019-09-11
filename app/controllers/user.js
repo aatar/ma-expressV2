@@ -75,8 +75,7 @@ exports.invalidateSessions = (req, res, next) => {
         .update({
           signout_datetime: Date()
         })
-        .then(() => res.send('OK'))
-        .catch(next);
+        .then(() => res.send('OK'));
     })
     .catch(next);
 };

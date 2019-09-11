@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       email: { type: Sequelize.STRING, allowNull: false, unique: true },
       password: { type: Sequelize.STRING, allowNull: false },
       admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
-      signout_datetime: { type: Sequelize.DATE, allowNull: true }
+      signout_datetime: { type: Sequelize.DATE }
     },
     {}
   );
