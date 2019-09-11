@@ -1,9 +1,8 @@
 'use strict';
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.createTable('Album_users', {
+  up: (queryInterface, Sequelize) =>
+    queryInterface
+      .createTable('Album_users', {
         id: {
           allowNull: false,
           autoIncrement: true,
@@ -36,20 +35,15 @@ module.exports = {
           allowNull: false,
           type: Sequelize.DATE
         }
-      });
-      await queryInterface.addIndex(
-        'Album_users',
-        {
+      })
+      .then(() =>
+        queryInterface.addIndex('Album_users', {
           fields: ['album_id', 'user_id'],
           unique: true
-        },
-        { transaction }
-      );
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
-  },
+        })
+      )
+      .catch(error => {
+        throw error;
+      }),
   down: queryInterface => queryInterface.dropTable('Album_users')
 };
