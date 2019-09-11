@@ -48,7 +48,16 @@ exports.login = (req, res, next) => {
       return compare(req.body.password, user.password).then(passwordIsFine => {
         if (passwordIsFine) {
           logger.info('Logged in');
-          const token = signJWT(JSON.stringify(user));
+          const token = signJWT({
+            id: user.id,
+            name: user.name,
+            surname: user.surname,
+            email: user.email,
+            password: user.password,
+            admin: user.admin,
+            signout_datetime: user.signout_datetime,
+            issued_at: Date()
+          });
           return res.set('Authorization', `${TOKEN_START} ${token}`).send('Logged in');
         }
         throw signinError('Email or password is incorrect');
@@ -59,7 +68,7 @@ exports.login = (req, res, next) => {
 
 exports.invalidateSessions = (req, res, next) => {
   logger.info('Searching user...');
-  return User.findById(req.params.userId)
+  return User.findById(req.params.user.id)
     .then(user => {
       logger.info('Updating user...');
       return user
