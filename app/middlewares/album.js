@@ -1,4 +1,4 @@
-const { Album_user, User } = require('../models'),
+const { Album_user } = require('../models'),
   { alreadyBoughtAlbumError } = require('../errors');
 
 exports.checkIfUserBoughtAlbum = (req, res, next) =>
@@ -6,13 +6,7 @@ exports.checkIfUserBoughtAlbum = (req, res, next) =>
     where: {
       album_id: req.params.id,
       user_id: req.params.user.id
-    },
-    include: [
-      {
-        model: User,
-        as: 'album_users'
-      }
-    ]
+    }
   })
     .then(album => {
       if (album) {
