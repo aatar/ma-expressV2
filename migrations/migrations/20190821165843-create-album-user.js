@@ -3,7 +3,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.createTable('AlbumUsers', {
+      await queryInterface.createTable('Album_users', {
         id: {
           allowNull: false,
           autoIncrement: true,
@@ -38,7 +38,7 @@ module.exports = {
         }
       });
       await queryInterface.addIndex(
-        'AlbumUsers',
+        'Album_users',
         {
           fields: ['album_id', 'user_id'],
           unique: true
@@ -51,5 +51,5 @@ module.exports = {
       throw err;
     }
   },
-  down: queryInterface => queryInterface.dropTable('AlbumUsers')
+  down: queryInterface => queryInterface.dropTable('Album_users')
 };

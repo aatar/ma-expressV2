@@ -1,8 +1,8 @@
-const { AlbumUser, User } = require('../models'),
+const { Album_user, User } = require('../models'),
   { alreadyBoughtAlbumError } = require('../errors');
 
 exports.checkIfUserBoughtAlbum = (req, res, next) =>
-  AlbumUser.findOne({
+  Album_user.findOne({
     where: {
       album_id: req.params.id,
       user_id: req.params.user.id
@@ -10,7 +10,7 @@ exports.checkIfUserBoughtAlbum = (req, res, next) =>
     include: [
       {
         model: User,
-        as: 'albumUsers'
+        as: 'album_users'
       }
     ]
   })

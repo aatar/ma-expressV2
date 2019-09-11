@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, Sequelize) => {
   const AlbumUser = sequelize.define(
-    'AlbumUser',
+    'Album_user',
     {
       id: { type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true },
       album_id: { type: Sequelize.INTEGER, allowNull: false },
@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
   AlbumUser.associate = models => {
     AlbumUser.belongsTo(models.User, {
       foreignKey: 'user_id',
-      as: 'albumUsers'
+      as: 'album_users'
     });
   };
   return AlbumUser;

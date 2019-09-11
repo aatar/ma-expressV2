@@ -4,7 +4,7 @@ const {
     findAlbumsById: findAlbumsByIdService
   } = require('../services/jsonplaceholder'),
   logger = require('../logger'),
-  { AlbumUser } = require('../models'),
+  { Album_user } = require('../models'),
   { albumMapper } = require('../mappers/album');
 
 exports.listAlbums = (req, res, next) => {
@@ -26,7 +26,7 @@ exports.buyAlbum = (req, res, next) => {
     .then(response => {
       logger.info('Creating album...');
       req.params.title = response.title;
-      return AlbumUser.create(albumMapper(req.params)).then(() => res.status(201).send('OK, bought album'));
+      return Album_user.create(albumMapper(req.params)).then(() => res.status(201).send('OK, bought album'));
     })
     .catch(next);
 };
