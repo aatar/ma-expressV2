@@ -21,7 +21,7 @@ exports.verifyJWT = (req, authorizationToken, admin) => {
           }
         })
           .then(user => {
-            if (user.signout_datetime && new Date(decoded.issued_at) < new Date(user.signout_datetime)) {
+            if (user.signout_datetime && new Date(decoded.issued_at) <= new Date(user.signout_datetime)) {
               return reject(signOutError('You signed out'));
             }
             logger.info('Search finished.');
