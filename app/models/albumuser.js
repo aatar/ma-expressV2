@@ -1,12 +1,12 @@
 'use strict';
 module.exports = (sequelize, Sequelize) => {
   const AlbumUser = sequelize.define(
-    'Album_user',
+    'albumUser',
     {
       id: { type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true },
-      album_id: { type: Sequelize.INTEGER, allowNull: false },
-      album_title: { type: Sequelize.STRING, allowNull: false },
-      user_id: {
+      albumId: { type: Sequelize.INTEGER, allowNull: false, field: 'album_id' },
+      albumTitle: { type: Sequelize.STRING, allowNull: false, field: 'album_title' },
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize) => {
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        field: 'user_id'
       }
     },
     {
@@ -23,7 +24,8 @@ module.exports = (sequelize, Sequelize) => {
           unique: true,
           fields: ['album_id', 'user_id']
         }
-      ]
+      ],
+      tableName: 'album_users'
     }
   );
   AlbumUser.associate = models => {

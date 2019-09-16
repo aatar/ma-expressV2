@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
     {}
   );
   User.associate = models => {
-    User.hasMany(models.Album_user, {
+    User.hasMany(models.albumUser, {
       foreignKey: 'user_id',
       as: 'album_users'
     });

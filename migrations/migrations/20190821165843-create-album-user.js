@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface
-      .createTable('Album_users', {
+      .createTable('album_users', {
         id: {
           allowNull: false,
           autoIncrement: true,
@@ -37,7 +37,7 @@ module.exports = {
         }
       })
       .then(() =>
-        queryInterface.addIndex('Album_users', {
+        queryInterface.addIndex('album_users', {
           fields: ['album_id', 'user_id'],
           unique: true
         })
@@ -45,5 +45,5 @@ module.exports = {
       .catch(error => {
         throw error;
       }),
-  down: queryInterface => queryInterface.dropTable('Album_users')
+  down: queryInterface => queryInterface.dropTable('album_users')
 };

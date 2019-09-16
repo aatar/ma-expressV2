@@ -1,5 +1,5 @@
 exports.albumMapper = params => ({
-  user_id: params.user.id,
-  album_id: params.id,
-  album_title: params.title
+  userId: params.user.id,
+  albumId: params.id,
+  albumTitle: params.title
 });
