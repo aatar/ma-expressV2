@@ -18,7 +18,7 @@ exports.listBoughtAlbums = (req, res, next) => {
   logger.info('Searching for bought albums');
   albumUser
     .findAll({
-      user_id: req.params.id,
+      userId: req.params.id,
       attributes: ['id', 'album_id', 'album_title', 'user_id']
     })
     .then(response => res.send(response))
