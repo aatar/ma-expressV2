@@ -20,6 +20,12 @@ exports.authenticateUser = user =>
     .send(user)
     .set('Accept', 'application/json');
 
+exports.buyAlbum = (album, token) =>
+  request(app)
+    .post(`/albums/${album}`)
+    .set('Accept', 'application/json')
+    .set('Authorization', token);
+
 exports.user = {
   name: 'Ariel',
   surname: 'Atar',
