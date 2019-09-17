@@ -37,7 +37,9 @@ exports.buyAlbum = (req, res, next) => {
     .then(response => {
       logger.info('Creating album...');
       req.params.title = response.title;
-      return albumUser.create(albumMapper(req.params)).then(() => res.status(201).send('OK, bought album'));
+      return albumUser
+        .create(albumMapper({ ...req.params, user: req.user }))
+        .then(() => res.status(201).send('OK, bought album'));
     })
     .catch(next);
 };
