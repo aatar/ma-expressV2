@@ -11,7 +11,8 @@ const statusCodes = {
   [errors.NOT_LOGGED_ERROR]: 401,
   [errors.NOT_HAS_ACCESS_ERROR]: 401,
   [errors.SCHEMA_ERROR]: 422,
-  [errors.ALREADY_BOUGHT_ALBUM_ERROR]: 409
+  [errors.ALREADY_BOUGHT_ALBUM_ERROR]: 409,
+  [errors.DIDNT_BUY_ALBUM_ERROR]: 409
 };
 
 exports.handle = (error, req, res, next) => {
