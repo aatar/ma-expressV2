@@ -13,6 +13,20 @@ exports.listAlbums = (req, res, next) => {
     .then(response => res.send(response))
     .catch(next);
 };
+
+exports.listBoughtAlbums = (req, res, next) => {
+  logger.info('Searching for bought albums');
+  return albumUser
+    .findAll({
+      userId: req.params.id,
+      attributes: ['id', 'album_id', 'album_title', 'user_id']
+    })
+    .then(response => {
+      logger.info('Albums found');
+      return res.send(response);
+    })
+    .catch(next);
+};
 exports.listPhotos = (req, res, next) => {
   logger.info('Listing photos...');
   return listPhotosService(req)
@@ -26,7 +40,9 @@ exports.buyAlbum = (req, res, next) => {
     .then(response => {
       logger.info('Creating album...');
       req.params.title = response.title;
-      return albumUser.create(albumMapper(req.params)).then(() => res.status(201).send('OK, bought album'));
+      return albumUser
+        .create(albumMapper({ ...req.params, user: req.user }))
+        .then(() => res.status(201).send('OK, bought album'));
     })
     .catch(next);
 };

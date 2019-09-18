@@ -6,7 +6,7 @@ exports.checkIfUserBoughtAlbum = (req, res, next) =>
     .findOne({
       where: {
         albumId: req.params.id,
-        userId: req.params.user.id
+        userId: req.user.id
       }
     })
     .then(album => {
