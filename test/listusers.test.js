@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const { authenticateUser } = require('./utils');
+const { authenticateUser, extractAuthorizationToken } = require('./utils');
 const { insertUser } = require('./factories');
 
 describe('GET /users', () => {
@@ -30,7 +30,7 @@ describe('GET /users', () => {
   test('should list users', async () => {
     const user = await insertUser();
     const loginResponse = await authenticateUser({ ...user, password: '123123123' });
-    const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
+    const token = `Bearer ${extractAuthorizationToken(loginResponse)}`;
     const response = await request(app)
       .get('/users')
       .set('Authorization', token);

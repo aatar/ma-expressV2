@@ -1,11 +1,11 @@
-const { createAdminUser, authenticateUser } = require('./utils');
+const { createAdminUser, authenticateUser, extractAuthorizationToken } = require('./utils');
 const { insertUser, insertAdminUser } = require('./factories');
 
 describe('POST /admin/users', () => {
   test('should insert admin user', async () => {
     const adminUser = await insertAdminUser();
     const loginResponse = await authenticateUser({ ...adminUser, password: '123123123' });
-    const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
+    const token = `Bearer ${extractAuthorizationToken(loginResponse)}`;
     const response = await createAdminUser(
       { ...adminUser, email: 'marcos.atar4@wolox.com.ar', password: '123123123' },
       token
@@ -17,7 +17,7 @@ describe('POST /admin/users', () => {
     const user = await insertUser();
     const adminUser = await insertAdminUser();
     const loginResponse = await authenticateUser({ ...adminUser, password: '123123123' });
-    const token = `Bearer ${loginResponse.headers.authorization.substring(8)}`;
+    const token = `Bearer ${extractAuthorizationToken(loginResponse)}`;
     const response = await createAdminUser(
       { ...user, email: 'marcos.atar3@wolox.com.ar', password: '123123123' },
       token

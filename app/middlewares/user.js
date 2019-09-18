@@ -6,7 +6,10 @@ exports.checkIfUserIsLogged = (req, res, next) => userCheck(req, res, next, fals
 exports.checkIfUserIsAdmin = (req, res, next) => userCheck(req, res, next, true);
 
 exports.checkIfUserHasAccess = (req, res, next) => {
-  if (req.params.admin || req.user.id.toString() === req.params.id) {
+  const { admin: isAdmin, id } = req.params,
+    { user } = req;
+
+  if (isAdmin || String(user.id) === id) {
     return next();
   }
   return next(notHasAccessError('You do not have access'));

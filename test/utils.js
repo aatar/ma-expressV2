@@ -33,3 +33,9 @@ exports.user = {
   password: '123123123',
   admin: false
 };
+
+exports.extractAuthorizationToken = serverResponse =>
+  serverResponse &&
+  serverResponse.headers &&
+  serverResponse.headers.authorization &&
+  serverResponse.headers.authorization.substring(8);
