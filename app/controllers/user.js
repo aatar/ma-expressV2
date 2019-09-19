@@ -60,7 +60,7 @@ exports.login = (req, res, next) => {
 
 exports.invalidateSessions = (req, res, next) => {
   logger.info('Searching user...');
-  return User.findById(req.params.user.id)
+  return User.findById(req.user.id)
     .then(user => {
       logger.info('Updating user...');
       return user
