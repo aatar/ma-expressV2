@@ -8,3 +8,5 @@ exports.userMapper = body =>
     password: hashedPassword,
     admin: body.admin
   }));
+
+exports.userWithDateMapper = user => ({ ...user.dataValues, issued_at: Date() });

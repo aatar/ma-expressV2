@@ -1,6 +1,7 @@
 const { User } = require('../models'),
   { signinError } = require('../errors'),
   { add: addInteractor } = require('../interactors/user'),
+  { userWithDateMapper } = require('../mappers/user'),
   { serializeUser } = require('../serializers/user'),
   logger = require('../logger'),
   { signJWT, compare } = require('./utils');
@@ -48,16 +49,7 @@ exports.login = (req, res, next) => {
       return compare(req.body.password, user.password).then(passwordIsFine => {
         if (passwordIsFine) {
           logger.info('Logged in');
-          const token = signJWT({
-            id: user.id,
-            name: user.name,
-            surname: user.surname,
-            email: user.email,
-            password: user.password,
-            admin: user.admin,
-            signout_datetime: user.signout_datetime,
-            issued_at: Date()
-          });
+          const token = signJWT(userWithDateMapper(user));
           return res.set('Authorization', `${TOKEN_START} ${token}`).send('Logged in');
         }
         throw signinError('Email or password is incorrect');
@@ -73,7 +65,7 @@ exports.invalidateSessions = (req, res, next) => {
       logger.info('Updating user...');
       return user
         .update({
-          signout_datetime: Date()
+          signoutDatetime: Date()
         })
         .then(() => res.send('OK'));
     })
