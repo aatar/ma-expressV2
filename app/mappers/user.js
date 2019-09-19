@@ -9,4 +9,4 @@ exports.userMapper = body =>
     admin: body.admin
   }));
 
-exports.userWithDateMapper = user => ({ ...user.dataValues, issued_at: Date() });
+exports.userWithDateMapper = user => ({ ...user.dataValues, issuedAt: Date() });

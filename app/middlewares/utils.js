@@ -22,7 +22,7 @@ exports.verifyJWT = (req, authorizationToken, admin) => {
           }
         })
           .then(user => {
-            if (user.signoutDatetime && moment(decoded.issued_at) <= moment(user.signoutDatetime)) {
+            if (user.signoutDatetime && moment(decoded.issuedAt).isSameOrBefore(user.signoutDatetime)) {
               return reject(signOutError('You signed out'));
             }
             logger.info('Search finished.');
