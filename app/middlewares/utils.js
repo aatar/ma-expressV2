@@ -3,6 +3,7 @@ const { User } = require('../models'),
   { notLoggedError, signOutError } = require('../errors'),
   logger = require('../logger'),
   jwt = require('jsonwebtoken'),
+  moment = require('moment'),
   { TOKEN_START } = require('../constants');
 
 const getNotLoggedError = admin =>
@@ -21,7 +22,7 @@ exports.verifyJWT = (req, authorizationToken, admin) => {
           }
         })
           .then(user => {
-            if (user.signoutDatetime && new Date(decoded.issued_at) <= new Date(user.signoutDatetime)) {
+            if (user.signoutDatetime && moment(decoded.issued_at) <= moment(user.signoutDatetime)) {
               return reject(signOutError('You signed out'));
             }
             logger.info('Search finished.');
