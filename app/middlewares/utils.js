@@ -4,7 +4,8 @@ const { User } = require('../models'),
   logger = require('../logger'),
   jwt = require('jsonwebtoken'),
   moment = require('moment'),
-  { TOKEN_START } = require('../constants');
+  { TOKEN_START } = require('../constants'),
+  config = require('../../config');
 
 const getNotLoggedError = admin =>
   notLoggedError(admin ? 'You have to be logged in as an admin user' : "You don't have access, please login");
@@ -12,7 +13,7 @@ const getNotLoggedError = admin =>
 exports.verifyJWT = (req, authorizationToken, admin) => {
   logger.info('Verifying JWT...');
   return new Promise((resolve, reject) => {
-    jwt.verify(authorizationToken, process.env.PRIVATE_KEY, (err, decoded) => {
+    jwt.verify(authorizationToken, config.common.privateKey, (err, decoded) => {
       if (decoded && decoded.email && decoded.password && (!admin || decoded.admin)) {
         logger.info('Searching user...');
         return User.findOne({

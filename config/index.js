@@ -42,7 +42,8 @@ const config = {
       header_name: 'authorization',
       secret: process.env.NODE_API_SESSION_SECRET
     },
-    tokenExpirationTime: '1h'
+    tokenExpirationTime: '1h',
+    privateKey: 'fgdsr4gtevgerfgssdffdggfdf'
   }
 };
 
