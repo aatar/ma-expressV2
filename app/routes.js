@@ -1,6 +1,6 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listBoughtAlbums, listPhotos, buyAlbum } = require('./controllers/album');
-const { addUser, addAdmin, login, list: listUsers } = require('./controllers/user');
+const { addUser, addAdmin, login, list: listUsers, invalidateSessions } = require('./controllers/user');
 const { validateSchema } = require('./middlewares/common');
 const { checkIfUserIsLogged, checkIfUserHasAccess, checkIfUserIsAdmin } = require('./middlewares/user');
 const { checkIfUserBoughtAlbum, checkIfUserDidntBuyAlbum } = require('./middlewares/album');
@@ -18,4 +18,5 @@ exports.init = app => {
   app.post('/admin/users', [checkIfUserIsAdmin], addAdmin);
   app.get('/users/:id/albums', [checkIfUserIsLogged, checkIfUserHasAccess], listBoughtAlbums);
   app.get('/users/albums/:id/photos', [checkIfUserIsLogged, checkIfUserBoughtAlbum], listPhotos);
+  app.post('/users/sessions/invalidate_all', [checkIfUserIsLogged], invalidateSessions);
 };

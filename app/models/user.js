@@ -8,7 +8,8 @@ module.exports = (sequelize, Sequelize) => {
       surname: { type: Sequelize.STRING, allowNull: false },
       email: { type: Sequelize.STRING, allowNull: false, unique: true },
       password: { type: Sequelize.STRING, allowNull: false },
-      admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false }
+      admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+      signoutDatetime: { type: Sequelize.DATE, field: 'signout_datetime' }
     },
     {}
   );

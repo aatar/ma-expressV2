@@ -20,6 +20,12 @@ exports.authenticateUser = user =>
     .send(user)
     .set('Accept', 'application/json');
 
+exports.disableAllSessions = token =>
+  request(app)
+    .post('/users/sessions/invalidate_all')
+    .set('Accept', 'application/json')
+    .set('Authorization', token);
+
 exports.buyAlbum = (album, token) =>
   request(app)
     .post(`/albums/${album}`)
