@@ -1,6 +1,7 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listBoughtAlbums, listPhotos, buyAlbum } = require('./controllers/album');
 const { addUser, addAdmin, login, list: listUsers, invalidateSessions } = require('./controllers/user');
+const { uploadVideo } = require('./controllers/media');
 const { validateSchema } = require('./middlewares/common');
 const { checkIfUserIsLogged, checkIfUserHasAccess, checkIfUserIsAdmin } = require('./middlewares/user');
 const { checkIfUserBoughtAlbum, checkIfUserDidntBuyAlbum } = require('./middlewares/album');
@@ -8,6 +9,7 @@ const schemas = require('./schemas');
 
 exports.init = app => {
   app.get('/', (req, res) => res.send('Welcome to Heroku'));
+  app.get('/upload-video', uploadVideo);
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
   app.post('/albums/:id', [checkIfUserIsLogged, checkIfUserDidntBuyAlbum], buyAlbum);
