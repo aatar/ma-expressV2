@@ -7,7 +7,7 @@ const { checkIfUserBoughtAlbum, checkIfUserDidntBuyAlbum } = require('./middlewa
 const schemas = require('./schemas');
 
 exports.init = app => {
-  app.get('/', (req, res) => res.send('Welcome to Heroku!!'));
+  app.get('/', (req, res) => res.send('Welcome to Heroku'));
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
   app.post('/albums/:id', [checkIfUserIsLogged, checkIfUserDidntBuyAlbum], buyAlbum);
