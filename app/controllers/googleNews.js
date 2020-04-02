@@ -26,6 +26,7 @@ exports.getPeriodicGoogleNews = (req, res, next) => {
             });
           }
         });
+        return res.send('OK');
       })
       .catch(next);
   });
