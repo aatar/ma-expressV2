@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) =>
@@ -12,10 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       link: {
-        type: Sequelize.STRING
-      },
-      content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(4096)
       },
       source: {
         type: Sequelize.STRING
