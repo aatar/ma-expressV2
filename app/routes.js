@@ -1,4 +1,4 @@
-const { addPizza } = require('./controllers/pizza');
+const { getPizzas, addPizza } = require('./controllers/pizza');
 const { addOrder } = require('./controllers/order');
 const { validateSchema } = require('./middlewares/common');
 
@@ -13,7 +13,8 @@ const schemas = require('./schemas');
 
 exports.init = app => {
   app.get('/', (req, res) => res.send('Welcome to Heroku'));
-  app.post('/pizzas', [], addPizza);
+  app.get('/pizzas', getPizzas);
+  app.post('/pizzas', addPizza);
   app.post('/orders', addOrder);
   app.post('/google-news', getPeriodicGoogleNews);
   app.get('/google-news', getGoogleNews);

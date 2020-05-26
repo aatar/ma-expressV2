@@ -13,3 +13,8 @@ exports.addPizza = (req, res, next) => {
   }
   return res.status(400).send('Incomplete data');
 };
+
+exports.getPizzas = (req, res, next) =>
+  Pizza.findAll()
+    .then(response => res.send(response))
+    .catch(next);
