@@ -1,15 +1,20 @@
+const { addPizza } = require('./controllers/pizza');
+const { addOrder } = require('./controllers/order');
+const { validateSchema } = require('./middlewares/common');
+
 const { healthCheck } = require('./controllers/healthCheck');
 const { listAlbums, listBoughtAlbums, listPhotos, buyAlbum } = require('./controllers/album');
 const { addUser, addAdmin, login, list: listUsers, invalidateSessions } = require('./controllers/user');
 const { uploadVideo } = require('./controllers/media');
 const { getPeriodicGoogleNews, getGoogleNews } = require('./controllers/googleNews');
-const { validateSchema } = require('./middlewares/common');
 const { checkIfUserIsLogged, checkIfUserHasAccess, checkIfUserIsAdmin } = require('./middlewares/user');
 const { checkIfUserBoughtAlbum, checkIfUserDidntBuyAlbum } = require('./middlewares/album');
 const schemas = require('./schemas');
 
 exports.init = app => {
   app.get('/', (req, res) => res.send('Welcome to Heroku'));
+  app.post('/pizzas', [], addPizza);
+  app.post('/orders', addOrder);
   app.post('/google-news', getPeriodicGoogleNews);
   app.get('/google-news', getGoogleNews);
   app.get('/upload-video', uploadVideo);
