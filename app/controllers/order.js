@@ -2,7 +2,7 @@ const logger = require('../logger'),
   { Order, PizzaOrder } = require('../models');
 
 exports.addOrder = (req, res, next) => {
-  const { fullName, contactNumber, deliveryAddress, pizzaId, quantity } = req.body;
+  const { fullName, contactNumber, deliveryAddress, pizzaId, quantity } = req.query;
   if (fullName && contactNumber && deliveryAddress && pizzaId && quantity) {
     if (pizzaId.length !== quantity.length) {
       return res.status(400).send('PizzaId length must be equals to quantity length');
@@ -25,5 +25,6 @@ exports.addOrder = (req, res, next) => {
       })
       .catch(next);
   }
+  logger.info('Incomplete data');
   return res.status(400).send('Incomplete data');
 };
