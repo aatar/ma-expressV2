@@ -21,10 +21,9 @@ exports.addOrder = (req, res, next) => {
             quantity: quantity[i]
           });
         }
-        return res.send('OK');
+        return res.status(201).send('OK');
       })
       .catch(next);
   }
-  logger.info('Incomplete data');
-  return res.status(400).send('Incomplete data');
+  return res.status(422).send('Incomplete data');
 };

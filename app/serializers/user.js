@@ -1,3 +1,0 @@
-exports.serializeUser = user => ({
-  user
-});

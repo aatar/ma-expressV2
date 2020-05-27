@@ -11,7 +11,7 @@ exports.addPizza = (req, res, next) => {
       .then(createdUser => res.status(201).send(createdUser))
       .catch(next);
   }
-  return res.status(400).send('Incomplete data');
+  return res.status(422).send('Incomplete data');
 };
 
 exports.getPizzas = (req, res, next) =>
