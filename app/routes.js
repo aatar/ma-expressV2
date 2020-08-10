@@ -6,6 +6,7 @@ const {
   getPeriodicGoogleNews,
   getInfobaeNews,
   getClarinNews,
+  getLaNacionNews,
   getGoogleNews
 } = require('./controllers/googleNews');
 const { validateSchema } = require('./middlewares/common');
@@ -19,6 +20,7 @@ exports.init = app => {
   app.get('/google-news', getGoogleNews);
   app.get('/infobae-news', getInfobaeNews);
   app.get('/clarin-news', getClarinNews);
+  app.get('/lanacion-news', getLaNacionNews);
   app.get('/upload-video', uploadVideo);
   app.get('/health', healthCheck);
   app.get('/albums', listAlbums);
