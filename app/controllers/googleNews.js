@@ -3,6 +3,20 @@ const { getNews } = require('../services/googleNews'),
   schedule = require('node-schedule'),
   { GoogleNews } = require('../models');
 
+const { MEDIA } = require('./constants');
+
+exports.getMedia = (req, res) => res.send(MEDIA);
+
+exports.getLastPubdate = (req, res, next) => {
+  if (!req.query.link) {
+    return res.status(400).send('Link is missing');
+  }
+  logger.info('Getting last date...');
+  return getNews([req.query.link])
+    .then(response => res.send(response.items[0].pubDate))
+    .catch(next);
+};
+
 exports.getInfobaeNews = (req, res, next) => {
   logger.info('Getting Infobae news...');
   return getNews(['https://www.infobae.com/feeds/rss/', 'https://www.infobae.com/feeds/rss/'])

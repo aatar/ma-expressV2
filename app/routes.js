@@ -3,7 +3,9 @@ const {
   getInfobaeNews,
   getClarinNews,
   getLaNacionNews,
-  getGoogleNews
+  getGoogleNews,
+  getLastPubdate,
+  getMedia
 } = require('./controllers/googleNews');
 
 exports.init = app => {
@@ -11,6 +13,8 @@ exports.init = app => {
   app.post('/google-news', getPeriodicGoogleNews);
   app.get('/google-news', getGoogleNews);
   app.get('/infobae-news', getInfobaeNews);
+  app.get('/news-last-pubDate', getLastPubdate);
   app.get('/clarin-news', getClarinNews);
+  app.get('/media', getMedia);
   app.get('/lanacion-news', getLaNacionNews);
 };
