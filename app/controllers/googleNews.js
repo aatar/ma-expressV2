@@ -5,7 +5,7 @@ const { getNews } = require('../services/googleNews'),
 
 exports.getInfobaeNews = (req, res, next) => {
   logger.info('Getting Infobae news...');
-  return getNews('https://www.infobae.com/feeds/rss/')
+  return getNews(['https://www.infobae.com/feeds/rss/', 'https://www.infobae.com/feeds/rss/'])
     .then(response => {
       let ans = [];
       // eslint-disable-next-line array-callback-return
@@ -20,7 +20,7 @@ exports.getInfobaeNews = (req, res, next) => {
 
 exports.getClarinNews = (req, res, next) => {
   logger.info('Getting Clarin news...');
-  return getNews('https://www.clarin.com/rss/politica/')
+  return getNews(['https://www.clarin.com/rss/politica/'])
     .then(response => {
       let ans = [];
       // eslint-disable-next-line array-callback-return
@@ -35,7 +35,7 @@ exports.getClarinNews = (req, res, next) => {
 
 exports.getLaNacionNews = (req, res, next) => {
   logger.info('Getting La Nacion news...');
-  return getNews('http://contenidos.lanacion.com.ar/herramientas/rss-categoria_id=30')
+  return getNews(['http://contenidos.lanacion.com.ar/herramientas/rss-categoria_id=30'])
     .then(response => {
       let ans = [];
       // eslint-disable-next-line array-callback-return
@@ -51,10 +51,10 @@ exports.getLaNacionNews = (req, res, next) => {
 exports.getPeriodicGoogleNews = (req, res, next) => {
   schedule.scheduleJob('0 * * * *', () => {
     logger.info('Getting Google news...');
-    return getNews(
+    return getNews([
       // eslint-disable-next-line max-len
       'https://news.google.com/rss/topics/CAAqKAgKIiJDQkFTRXdvSkwyMHZNREZqY0hsNUVnWmxjeTAwTVRrb0FBUAE?hl=es-419&gl=AR&ceid=AR%3Aes-419'
-    )
+    ])
       .then(response => {
         response.items.map(async item => {
           const news = await GoogleNews.findOne({
