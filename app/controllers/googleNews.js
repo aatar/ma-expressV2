@@ -3,9 +3,9 @@ const { getNews } = require('../services/googleNews'),
   schedule = require('node-schedule'),
   { GoogleNews } = require('../models');
 
-const { MEDIA } = require('./constants');
+const { SOURCES } = require('./constants');
 
-exports.getMedia = (req, res) => res.send(MEDIA);
+exports.getSources = (req, res) => res.send(SOURCES);
 
 exports.getLastPubdate = (req, res, next) => {
   if (!req.query.link) {
